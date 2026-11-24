@@ -11,7 +11,7 @@ export const site = {
   brand: 'I Do Cam',
   tagline: 'Say “I do.” Let everyone else film it.',
   description:
-    'I Do Cam ships a 4K camcorder kit to your wedding. Your guests film the candid moments all weekend, and our editors turn it into a highlight film you will watch forever.',
+    'I Do Cam ships a real HD camcorder kit to your wedding. Your guests film the candid moments all weekend, and our editors turn it into a highlight film you will watch forever.',
   url: 'https://idocam.com', // production URL (used for canonical, sitemap, OG)
   currency: 'USD',
   currencySymbol: '$',

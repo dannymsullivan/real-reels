@@ -23,7 +23,7 @@ const jsonLd = {
     ...site.packages.map((p) => ({
       '@type': 'Product',
       name: `${site.brand} ${p.name} wedding camcorder package`,
-      description: `${p.cameras} 4K camcorder${p.cameras > 1 ? 's' : ''}, ${p.hours} hours of recording, a ${p.filmMin}–${p.filmMax} minute edited highlight film and all raw footage. ${(p as any).rentalDays ?? site.rental.days}-day rental.${((p as any).extras ?? []).map((e: any) => ' ' + e.label + '.').join('')}${(p as any).perk ? ' ' + (p as any).perk.text : ''}`,
+      description: `${p.cameras} HD camcorder${p.cameras > 1 ? 's' : ''}, ${p.hours} hours of recording, a ${p.filmMin}–${p.filmMax} minute edited highlight film and all raw footage. ${(p as any).rentalDays ?? site.rental.days}-day rental.${((p as any).extras ?? []).map((e: any) => ' ' + e.label + '.').join('')}${(p as any).perk ? ' ' + (p as any).perk.text : ''}`,
       brand: { '@type': 'Brand', name: site.brand },
       image: ogImage,
       offers: { '@type': 'Offer', price: p.price, priceCurrency: site.currency, availability: 'https://schema.org/InStock', url: `${site.url}/#packages` },

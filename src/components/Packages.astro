@@ -51,7 +51,7 @@ const ticks = [0, filmScale / 2, filmScale];
             <dl class={`mt-6 divide-y ${dark ? 'divide-ivory/10' : 'divide-ink/10'}`}>
               <!-- Cameras -->
               <div class="flex items-center justify-between gap-3 py-4">
-                <dt class={`text-sm ${muted}`}>4K camcorder{p.cameras > 1 ? 's' : ''}</dt>
+                <dt class={`text-sm ${muted}`}>HD camcorder{p.cameras > 1 ? 's' : ''}</dt>
                 <dd class="flex items-center gap-1.5" aria-label={`${p.cameras} camcorder${p.cameras > 1 ? 's' : ''}`}>
                   {Array.from({ length: maxCams }).map((_, k) => (
                     <span class={`grid h-10 w-10 place-items-center rounded-xl ${k < p.cameras ? (dark ? 'bg-ivory/10 text-ivory' : 'bg-cream text-ink') : (dark ? 'border border-dashed border-ivory/15 text-ivory/15' : 'border border-dashed border-ink/15 text-ink/15')}`}>
@@ -159,7 +159,7 @@ const ticks = [0, filmScale / 2, filmScale];
         </thead>
         <tbody class="divide-y divide-ink/10">
           {[
-            ['4K camcorders', (p: any) => <span class="font-display text-lg">{p.cameras}</span>],
+            ['HD camcorders', (p: any) => <span class="font-display text-lg">{p.cameras}</span>],
             ['Batteries · record time', (p: any) => `${p.batteries} · ${p.hours} hrs`],
             ['Memory', (p: any) => `${p.cards} × ${p.cardSize}`],
             ['Edited highlight film', (p: any) => `${p.filmMin}–${p.filmMax} min`],

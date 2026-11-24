@@ -18,7 +18,7 @@ body{{margin:0;width:1200px;height:630px;overflow:hidden;font-family:I,sans-seri
 img{{width:420px}} h1{{font-family:F,serif;font-style:italic;font-weight:400;font-size:58px;line-height:1.05;margin:36px 0 18px;color:#e9cfc4}}
 p{{font-size:22px;opacity:.85;margin:0}} .u{{position:absolute;right:40px;bottom:30px;color:#f8f3ea;font:600 16px I;letter-spacing:.25em}}
 </style></head><body><div class=bg></div><div class=sh></div><div class=c><img src="data:image/svg+xml;base64,{wm}">
-<h1>Say “I do.”<br>Let everyone else film it.</h1><p>A 4K camcorder kit for your guests + a beautifully edited film.</p></div>
+<h1>Say “I do.”<br>Let everyone else film it.</h1><p>A real HD camcorder kit for your guests + a beautifully edited film.</p></div>
 <div class=u>IDOCAM.COM</div></body></html>"""
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path="/usr/bin/google-chrome")
