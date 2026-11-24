@@ -3,20 +3,21 @@ import Icon from './Icon.astro';
 import { site } from '../config/site';
 // Hotspot x/y are % positions on kit-flatlay.jpg — nudge them once the real photo is in.
 const items = [
-  { icon: 'camcorder', name: '4K camcorder', note: '1 or 2, set up & ready', x: 34, y: 38 },
-  { icon: 'battery', name: 'Batteries + charger', note: '8 hrs per camera', x: 70, y: 28 },
-  { icon: 'card', name: '256GB memory card', note: 'Pre-formatted, one per camera', x: 76, y: 60 },
-  { icon: 'list', name: 'Shot-list cards', note: 'Prompts guests love', x: 22, y: 72 },
-  { icon: 'sticker', name: 'Guide stickers', note: 'Record · stop · zoom, on the camera', x: 50, y: 66 },
-  { icon: 'bag', name: 'Padded carry bag', note: 'Hand it off safely', x: 56, y: 18 },
-  { icon: 'truck', name: 'Prepaid return label', note: 'Reseal, drop off, done', x: 84, y: 84 },
+  { icon: 'camcorder', name: '4K camcorder', note: '1 or 2, charged & ready to roll', x: 72, y: 31 },
+  { icon: 'battery', name: 'Spare batteries', note: 'Up to 8 hrs of recording per camera', x: 26, y: 45 },
+  { icon: 'card', name: '256GB memory card', note: 'Pre-formatted, one per camera', x: 46, y: 43 },
+  { icon: 'list', name: 'Instruction & shot-list card', note: 'Prompts your guests will love', x: 26, y: 29 },
+  { icon: 'bag', name: 'Carry bag', note: 'For passing it hand to hand', x: 26, y: 70 },
+  { icon: 'plug', name: 'Charger & cable', note: 'Top up overnight', x: 76, y: 72 },
 ];
+const extras = ['Guide stickers on the camera', 'Prepaid return label'];
 ---
-<section id="box" class="section bg-ink text-ivory">
+<section id="box" class="section relative bg-ink text-ivory">
+  <div class="absolute inset-x-0 top-0 flex flex-col gap-[3px] opacity-70" aria-hidden="true"><span class="h-[3px] bg-rose"></span><span class="h-[3px] bg-gold"></span><span class="h-[3px] bg-sage"></span></div>
   <div class="wrap grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
     <div class="relative reveal">
       <figure class="slot aspect-square rounded-[2rem]">
-        <img src="/media/kit-flatlay.jpg" alt={`Flat-lay of the ${site.brand} kit: camcorder, batteries, memory card, shot-list cards, stickers and carry bag`}  loading="lazy" decoding="async" width="1600" height="1600" />
+        <img src="/media/kit-flatlay.jpg" alt={`Flat-lay of the ${site.brand} kit on linen: camcorder, spare batteries, memory card, instruction card, carry bag, charger and cable`}  loading="lazy" decoding="async" width="1600" height="1600" />
       </figure>
       {items.map((it, i) => (
         <span class="absolute grid h-8 w-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-ivory font-mono text-xs font-semibold text-ink shadow-lg ring-4 ring-ivory/25" style={`left:${it.x}%;top:${it.y}%`} aria-hidden="true">{i + 1}</span>
@@ -24,6 +25,7 @@ const items = [
     </div>
     <div>
       <p class="eyebrow !text-blush reveal">What's in the box</p>
+      <span class="reveal mt-4 flex w-20 flex-col gap-[3px]" aria-hidden="true"><span class="h-[3px] rounded-full bg-rose"></span><span class="h-[3px] rounded-full bg-gold"></span><span class="h-[3px] rounded-full bg-sage"></span></span>
       <h2 class="reveal mt-4 text-[clamp(2.2rem,4.6vw,3.9rem)] font-light leading-[1.04]" style="--d:100ms">Open. Press record. <em class="italic text-blush">That's it.</em></h2>
       <ol class="mt-10 grid gap-x-6 gap-y-5 sm:grid-cols-2">
         {items.map((it, i) => (
@@ -36,6 +38,10 @@ const items = [
           </li>
         ))}
       </ol>
+      <p class="reveal mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ivory/10 pt-6 text-sm text-ivory/70">
+        <span class="font-medium text-ivory">Also inside:</span>
+        {extras.map((e) => <span class="flex items-center gap-2"><Icon name="check" class="h-4 w-4 text-sage" />{e}</span>)}
+      </p>
     </div>
   </div>
 </section>

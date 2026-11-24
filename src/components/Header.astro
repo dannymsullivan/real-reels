@@ -10,9 +10,9 @@ const links = [
 ---
 <header id="top-nav" class="fixed inset-x-0 top-0 z-50 text-ivory transition-[background-color,color,box-shadow,backdrop-filter] duration-500 data-[solid=true]:bg-ivory/85 data-[solid=true]:text-ink data-[solid=true]:shadow-[0_1px_0_rgb(42_33_29/0.08)] data-[solid=true]:backdrop-blur-md">
   <nav class="wrap flex h-[4.5rem] items-center justify-between" aria-label="Main">
-    <a href="#" class="group flex items-center gap-2 font-display text-[1.6rem] italic leading-none" aria-label={`${site.brand} home`}>
-      <span class="rec-dot inline-block h-2 w-2 rounded-full bg-rec" aria-hidden="true"></span>
-      {site.brand}
+    <a href="#" class="block shrink-0" aria-label={`${site.brand} home`}>
+      <img src="/brand/wordmark-light.svg" alt={site.brand} width="500" height="110" class="h-8 w-auto sm:h-9 in-data-[solid=true]:hidden" />
+      <img src="/brand/wordmark.svg" alt={site.brand} width="500" height="110" class="hidden h-8 w-auto sm:h-9 in-data-[solid=true]:block" />
     </a>
     <ul class="hidden items-center gap-8 text-[0.88rem] font-medium lg:flex">
       {links.map((l) => <li><a class="opacity-85 transition hover:opacity-100 relative after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all hover:after:w-full" href={l.href}>{l.label}</a></li>)}

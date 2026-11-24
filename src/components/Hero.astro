@@ -6,9 +6,11 @@ import { site, money, fromPrice } from '../config/site';
   <img src="/media/hero-poster.jpg" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" decoding="async" />
   <video id="hero-video" class="absolute inset-0 -z-10 h-full w-full object-cover motion-reduce:hidden"
     autoplay muted loop playsinline preload="metadata" poster="/media/hero-poster.jpg" aria-hidden="true" tabindex="-1">
+    <source src="/media/hero.webm" type="video/webm" />
     <source src="/media/hero.mp4" type="video/mp4" />
   </video>
-  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/40"></div>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/20 to-ink/50"></div>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/75 via-ink/35 to-transparent max-sm:from-ink/50 max-sm:via-ink/30"></div>
 
   <!-- Camcorder viewfinder overlay -->
   <div class="pointer-events-none absolute inset-4 sm:inset-8 top-24 sm:top-28 font-mono text-[11px] sm:text-xs tracking-[0.2em] text-ivory/85" aria-hidden="true">
@@ -26,7 +28,7 @@ import { site, money, fromPrice } from '../config/site';
   <div class="wrap relative pb-20 sm:pb-24 pt-40">
     <p class="eyebrow !text-blush reveal">The guest-filmed wedding video</p>
     <h1 class="reveal mt-5 max-w-4xl text-[clamp(2.7rem,7.2vw,6.4rem)] font-light leading-[0.98]" style="--d:120ms">
-      Your wedding, through the eyes of <em class="font-normal italic text-blush">everyone</em> who loves you.
+      Say “I do.”<br /><em class="font-normal italic text-blush">Let everyone else film it.</em>
     </h1>
     <p class="reveal mt-6 max-w-xl text-lg text-ivory/85 sm:text-xl" style="--d:240ms">
       We ship a 4K camcorder kit. Your guests film all weekend. We edit the film you'll rewatch forever.
