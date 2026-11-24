@@ -23,7 +23,6 @@ const year = new Date().getFullYear();
         <p class="eyebrow">Say hello</p>
         <ul class="mt-4 space-y-2 text-sm text-cocoa/85">
           <li><a class="inline-flex items-center gap-2 hover:text-ink" href={`mailto:${site.contact.email}`}><Icon name="mail" class="h-4 w-4" />{site.contact.email}</a></li>
-          <li><a class="hover:text-ink" href={`tel:${site.contact.phone.replace(/[^\d+]/g, '')}`}>{site.contact.phone}</a></li>
         </ul>
       </div>
       <div>
@@ -38,7 +37,7 @@ const year = new Date().getFullYear();
     <p class="mt-20 select-none text-center font-display text-[clamp(4rem,17vw,15rem)] font-light italic leading-none text-ink/[0.06]" aria-hidden="true">{site.brand}</p>
     <div class="mt-6 flex flex-col justify-between gap-3 border-t border-ink/10 pt-6 text-xs text-cocoa/70 sm:flex-row">
       <p>© {year} {site.brand}. All rights reserved.</p>
-      <p>Ships to {site.rental.shipsTo.join(' · ')}</p>
+      <p>Ships free anywhere in the United States</p>
     </div>
   </div>
 </footer>

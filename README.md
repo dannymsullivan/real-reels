@@ -10,7 +10,7 @@ npm run preview
 ```
 
 ## Change brand, prices, contact, shipping, form
-Everything lives in **`src/config/site.ts`**: brand name, tagline, URL, email/phone/socials,
+Everything lives in **`src/config/site.ts`**: brand name, tagline, URL, email/socials,
 booking-form `action` (empty = opens a pre-filled email to `contact.email`), rental terms
 (days, arrival window, return window, ship-to countries) and the **packages** (price, cameras,
 batteries, hours, cards, film length, "most popular"). The package cards, comparison table,
@@ -55,14 +55,19 @@ them after the real photo lands. Gallery alt text/captions live in `src/componen
 - `public/favicon.svg` (icon A), `favicon-32.png`, `apple-touch-icon.png` (180, opaque), `icon-192.png`, `icon-512.png`, `site.webmanifest`. Regenerate the PNGs + OG image with `python scripts/make_brand_assets.py` (needs Playwright + Chrome).
 - The rose/gold/sage tape stripes from direction B are used only as an accent in "What's in the box".
 
-## Optional honeymoon tier
-`src/config/site.ts` has a commented-out third package (`heirloom`) with `rentalDays: 14` and a `perk`
-("Keep it for the honeymoon"), shown with a plane icon on the card and in the comparison table. Set a price and uncomment to enable.
+## Packages (3-tier anchored pricing)
+Defined in `src/config/site.ts` → `packages`:
+- **Essentials** $729: 1 camcorder, 3 batteries / 8 hrs, 1×256GB, 3–5 min film, 7-day rental.
+- **Signature** $989 (`popular: true`, center, emphasized): 2 camcorders, 6 batteries / 16 hrs, 2×256GB, 5–7 min film, 7-day rental.
+- **Heirloom** $1,995: 3 camcorders, 9 batteries / 24 hrs, 3×256GB, 10–12 min film, plus `extras`
+  (60-sec social teaser, 2-week rush edit, keepsake USB in a linen box) and a `perk`
+  ("Keep it for the honeymoon": `rentalDays: 14`, honeymoon clips added to the film, plane icon).
+Cards, the comparison table, booking-form options, FAQ and JSON-LD all read from this list.
 
 ## Placeholders to replace before launch
 - Press strip names (`PressStrip.astro`) are fictional placeholders.
 - Testimonials (`Testimonials.astro`) are labeled samples.
-- `site.url`, email, phone, socials in `site.ts`; `public/robots.txt` sitemap URL.
+- `site.url`, email, socials in `site.ts`; `public/robots.txt` sitemap URL.
 
 ## Review screenshots
 With `npm run preview` running: `python scripts/screenshots.py` (Playwright + Chrome) writes to

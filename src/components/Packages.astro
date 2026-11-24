@@ -1,51 +1,61 @@
 ---
 import Icon from './Icon.astro';
 import { site, money } from '../config/site';
-const pkgs = site.packages;
-const maxHours = Math.max(...pkgs.map((p) => p.hours));
+type Extra = { icon: string; label: string };
+const pkgs = site.packages as readonly any[];
+const maxCams = Math.max(...pkgs.map((p) => p.cameras));
+const maxBatt = Math.max(...pkgs.map((p) => p.batteries));
 const filmScale = Math.max(8, ...pkgs.map((p) => p.filmMax)); // minutes on the film-length ruler
 const daysOf = (p: any): number => p.rentalDays ?? site.rental.days;
 const perkOf = (p: any): { icon: string; title: string; text: string } | undefined => p.perk;
-const incLabel = (p: any, it: { icon: string; label: string }) => (it.icon === 'calendar' ? `${daysOf(p)}-day rental` : it.label);
-const cols = pkgs.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3 max-w-6xl' : 'md:grid-cols-2 max-w-5xl';
+const extrasOf = (p: any): Extra[] => p.extras ?? [];
+const allExtras: Extra[] = [...new Map(pkgs.flatMap(extrasOf).map((e) => [e.label, e])).values()];
+const incLabel = (p: any, it: Extra) => (it.icon === 'calendar' ? `${daysOf(p)}-day rental` : it.label);
+const anyPerk = pkgs.map(perkOf).find(Boolean);
+const perkHolder = pkgs.find((p) => perkOf(p))?.name;
+const isRush = (p: any) => extrasOf(p).some((e) => e.icon === 'clock');
+const countWord = ['One box', 'Two boxes', 'Three boxes', 'Four boxes'][pkgs.length - 1] ?? 'Our boxes';
+const cols = pkgs.length >= 3 ? 'max-w-xl lg:max-w-none lg:grid-cols-3 lg:gap-6 xl:gap-8' : 'max-w-5xl md:grid-cols-2 md:gap-8';
+const ticks = [0, filmScale / 2, filmScale];
 ---
 <section id="packages" class="section bg-ivory">
   <div class="wrap">
     <div class="mx-auto max-w-2xl text-center">
       <p class="eyebrow reveal">Packages</p>
-      <h2 class="reveal mt-4 text-[clamp(2.2rem,4.6vw,3.9rem)] font-light leading-[1.04]" style="--d:100ms">{["One box", "Two boxes", "Three boxes", "Four boxes"][pkgs.length - 1]}. <em class="italic text-rose-deep">Pick yours.</em></h2>
+      <h2 class="reveal mt-4 text-[clamp(2.2rem,4.6vw,3.9rem)] font-light leading-[1.04]" style="--d:100ms">{countWord}. <em class="italic text-rose-deep">Pick yours.</em></h2>
       <p class="reveal mt-4 text-cocoa/80" style="--d:200ms">Everything below is included. No add-ons, no surprises. Shipping both ways is on us.</p>
     </div>
 
-    <div class={`mx-auto mt-14 grid gap-6 md:gap-8 ${cols}`}>
+    <div class={`mx-auto mt-16 grid items-stretch gap-8 ${cols}`}>
       {pkgs.map((p, i) => {
         const dark = p.popular;
+        const muted = dark ? 'text-ivory/70' : 'text-cocoa/75';
         return (
-          <article class={`reveal relative flex flex-col rounded-[2rem] p-7 sm:p-9 ${dark ? 'bg-ink text-ivory shadow-2xl shadow-ink/30 md:-my-4 md:py-12' : 'border border-ink/10 bg-white/60'}`} style={`--d:${i * 140}ms`} aria-labelledby={`pkg-${p.id}`}>
+          <article class={`reveal relative flex flex-col rounded-[2rem] p-7 sm:p-8 ${dark ? 'z-10 bg-ink text-ivory shadow-2xl shadow-ink/30 ring-1 ring-rose/40 lg:-my-6 lg:py-12' : 'border border-ink/10 bg-white/60'}`} style={`--d:${i * 140}ms`} aria-labelledby={`pkg-${p.id}`}>
             {p.popular && (
               <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-rose px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-ivory shadow-lg">
                 <Icon name="star" class="mr-1 -mt-0.5 inline h-3 w-3" />Most popular
               </span>
             )}
-            <header class="flex items-start justify-between gap-4">
-              <div>
-                <h3 id={`pkg-${p.id}`} class="font-display text-4xl">{p.name}</h3>
-                <p class={`mt-1 text-sm ${dark ? 'text-ivory/70' : 'text-cocoa/75'}`}>{p.blurb}</p>
-              </div>
-              <div class="text-right">
+            <header>
+              <h3 id={`pkg-${p.id}`} class="font-display text-3xl sm:text-[2.1rem]">{p.name}</h3>
+              <p class={`mt-1 text-sm ${muted}`}>{p.blurb}</p>
+              <div class="mt-5 flex items-end justify-between gap-3">
                 <p class="font-display text-5xl leading-none">{money(p.price)}</p>
-                <p class={`mt-1.5 text-xs ${dark ? 'text-ivory/60' : 'text-cocoa/65'}`}>{daysOf(p)}-day rental</p>
+                <span class={`mb-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${perkOf(p) ? 'bg-rose text-ivory' : dark ? 'bg-ivory/10 text-ivory/80' : 'bg-cream text-cocoa'}`}>
+                  <Icon name={perkOf(p) ? 'plane' : 'calendar'} class="h-3.5 w-3.5" />{daysOf(p)}-day rental
+                </span>
               </div>
             </header>
 
-            <dl class={`mt-8 divide-y ${dark ? 'divide-ivory/10' : 'divide-ink/10'}`}>
+            <dl class={`mt-6 divide-y ${dark ? 'divide-ivory/10' : 'divide-ink/10'}`}>
               <!-- Cameras -->
-              <div class="flex items-center justify-between gap-4 py-4">
-                <dt class={`text-sm ${dark ? 'text-ivory/70' : 'text-cocoa/75'}`}>4K camcorder{p.cameras > 1 ? 's' : ''}</dt>
-                <dd class="flex items-center gap-2" aria-label={`${p.cameras} camcorder${p.cameras > 1 ? 's' : ''}`}>
-                  {Array.from({ length: 2 }).map((_, k) => (
-                    <span class={`grid h-12 w-12 place-items-center rounded-xl ${k < p.cameras ? (dark ? 'bg-ivory/10 text-ivory' : 'bg-cream text-ink') : (dark ? 'border border-dashed border-ivory/15 text-ivory/15' : 'border border-dashed border-ink/15 text-ink/15')}`}>
-                      <Icon name="camcorder" class="h-7 w-7" />
+              <div class="flex items-center justify-between gap-3 py-4">
+                <dt class={`text-sm ${muted}`}>4K camcorder{p.cameras > 1 ? 's' : ''}</dt>
+                <dd class="flex items-center gap-1.5" aria-label={`${p.cameras} camcorder${p.cameras > 1 ? 's' : ''}`}>
+                  {Array.from({ length: maxCams }).map((_, k) => (
+                    <span class={`grid h-10 w-10 place-items-center rounded-xl ${k < p.cameras ? (dark ? 'bg-ivory/10 text-ivory' : 'bg-cream text-ink') : (dark ? 'border border-dashed border-ivory/15 text-ivory/15' : 'border border-dashed border-ink/15 text-ink/15')}`}>
+                      <Icon name="camcorder" class="h-6 w-6" />
                     </span>
                   ))}
                   <span class="ml-1 w-8 text-right font-display text-2xl">×{p.cameras}</span>
@@ -53,88 +63,118 @@ const cols = pkgs.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3 max-w-6xl' : 'md:
               </div>
               <!-- Record time -->
               <div class="py-4">
-                <div class="flex items-center justify-between gap-4">
-                  <dt class={`text-sm ${dark ? 'text-ivory/70' : 'text-cocoa/75'}`}>Record time · {p.batteries} batteries</dt>
+                <div class="flex items-center justify-between gap-3">
+                  <dt class={`text-sm ${muted}`}>Record time · {p.batteries} batteries</dt>
                   <dd class="font-display text-2xl">{p.hours}<span class="text-base"> hrs</span></dd>
                 </div>
                 <div class="mt-3 flex gap-1" aria-hidden="true">
-                  {Array.from({ length: maxHours / 8 * 3 }).map((_, k) => (
+                  {Array.from({ length: maxBatt }).map((_, k) => (
                     <span class={`h-3 flex-1 rounded-[3px] ${k < p.batteries ? 'bg-sage' : (dark ? 'bg-ivory/10' : 'bg-ink/8')}`}></span>
                   ))}
                 </div>
               </div>
               <!-- Film length -->
               <div class="py-4">
-                <div class="flex items-center justify-between gap-4">
-                  <dt class={`text-sm ${dark ? 'text-ivory/70' : 'text-cocoa/75'}`}>Edited highlight film</dt>
+                <div class="flex items-center justify-between gap-3">
+                  <dt class={`text-sm ${muted}`}>Edited highlight film</dt>
                   <dd class="font-display text-2xl">{p.filmMin}–{p.filmMax}<span class="text-base"> min</span></dd>
                 </div>
-                <div class="relative mt-3 h-6" aria-hidden="true">
+                <div class="relative mx-3 mt-3 h-6" aria-hidden="true">
                   <div class={`absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full ${dark ? 'bg-ivory/10' : 'bg-ink/8'}`}></div>
-                  <div class="absolute top-1/2 h-2 -translate-y-1/2 rounded-full bg-rose" style={`left:0;width:${(p.filmMax / filmScale) * 100}%; opacity:.35`}></div>
+                  <div class="absolute top-1/2 h-2 -translate-y-1/2 rounded-full bg-rose/35" style={`left:0;width:${(p.filmMax / filmScale) * 100}%`}></div>
                   <div class="absolute top-1/2 h-2 -translate-y-1/2 rounded-full bg-rose" style={`left:0;width:${(p.filmMin / filmScale) * 100}%`}></div>
-<span style={`left:${(p.filmMax / filmScale) * 100}%`} class={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 grid h-6 w-6 place-items-center rounded-full ${dark ? 'bg-ink' : 'bg-ivory'} ring-2 ring-rose`}><span class="h-1.5 w-1.5 rounded-full bg-rose"></span></span>
+                  <span style={`left:${(p.filmMax / filmScale) * 100}%`} class={`absolute top-1/2 grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full ring-2 ring-rose ${dark ? 'bg-ink' : 'bg-ivory'}`}><span class="h-1.5 w-1.5 rounded-full bg-rose"></span></span>
                 </div>
-                <div class={`mt-1 flex justify-between font-mono text-[10px] ${dark ? 'text-ivory/40' : 'text-cocoa/50'}`} aria-hidden="true"><span>0</span><span>{Math.round(filmScale / 2)}</span><span>{filmScale} min</span></div>
+                <div class={`mx-3 mt-1 flex justify-between font-mono text-[10px] ${dark ? 'text-ivory/40' : 'text-cocoa/50'}`} aria-hidden="true">{ticks.map((t, k) => <span>{t}{k === ticks.length - 1 ? ' min' : ''}</span>)}</div>
               </div>
               <!-- Memory -->
-              <div class="flex items-center justify-between gap-4 py-4">
-                <dt class={`text-sm ${dark ? 'text-ivory/70' : 'text-cocoa/75'}`}>Memory cards</dt>
-                <dd class="flex items-center gap-2" aria-label={`${p.cards} × ${p.cardSize} card${p.cards > 1 ? 's' : ''}`}>
-                  {Array.from({ length: p.cards }).map(() => <Icon name="card" class={`h-7 w-7 ${dark ? 'text-gold' : 'text-gold'}`} />)}
-                  <span class="font-display text-xl">{p.cards}×{p.cardSize}</span>
+              <div class="flex items-center justify-between gap-3 py-4">
+                <dt class={`text-sm ${muted}`}>Memory cards</dt>
+                <dd class="flex items-center gap-1.5" aria-label={`${p.cards} × ${p.cardSize} card${p.cards > 1 ? 's' : ''}`}>
+                  {Array.from({ length: p.cards }).map(() => <Icon name="card" class="h-6 w-6 text-gold" />)}
+                  <span class="ml-1 font-display text-xl">{p.cards}×{p.cardSize}</span>
                 </dd>
               </div>
             </dl>
 
-            {perkOf(p) && (
-              <div class={`mt-6 flex items-start gap-3.5 rounded-2xl p-4 ${dark ? 'bg-ivory/10' : 'bg-blush/40'}`}>
-                <span class={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${dark ? 'bg-ivory text-ink' : 'bg-ivory text-rose-deep'}`}><Icon name={perkOf(p)!.icon} class="h-5 w-5" /></span>
-                <div>
-                  <p class="font-display text-lg leading-tight">{perkOf(p)!.title}</p>
-                  <p class={`mt-0.5 text-xs ${dark ? 'text-ivory/70' : 'text-cocoa/80'}`}>{perkOf(p)!.text}</p>
+            {anyPerk && (() => {
+              const has = !!perkOf(p);
+              const pk = perkOf(p) ?? anyPerk;
+              return (
+                <div class={`mt-5 flex items-start gap-3.5 rounded-2xl p-4 ${has ? (dark ? 'bg-ivory/10' : 'bg-blush/45') : `border border-dashed opacity-45 ${dark ? 'border-ivory/20' : 'border-ink/15'}`}`}>
+                  <span class={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${has ? 'bg-ivory text-rose-deep' : dark ? 'bg-ivory/10' : 'bg-cream'}`}><Icon name={pk.icon} class="h-5 w-5" /></span>
+                  <div>
+                    <p class={`font-display text-lg leading-tight ${has ? '' : 'line-through decoration-1'}`}>{pk.title}</p>
+                    <p class={`mt-0.5 text-xs leading-snug ${dark ? 'text-ivory/70' : 'text-cocoa/80'}`}>{has ? pk.text : `${perkHolder} only`}</p>
+                  </div>
                 </div>
-              </div>
+              );
+            })()}
+            {allExtras.length > 0 && (
+              <ul class="mt-3 grid grid-cols-3 gap-2" aria-label={`${p.name} extras`}>
+                {allExtras.map((e) => {
+                  const has = extrasOf(p).some((x) => x.label === e.label);
+                  return (
+                    <li class={`flex flex-col items-center gap-1.5 rounded-xl px-1.5 py-3 text-center ${has ? (dark ? 'bg-ivory/5' : 'bg-gold/10') : `border border-dashed opacity-40 ${dark ? 'border-ivory/20' : 'border-ink/15'}`}`}>
+                      <Icon name={e.icon} class={`h-5 w-5 ${has ? 'text-gold' : ''}`} />
+                      <span class={`text-[11px] font-medium leading-tight ${has ? '' : 'line-through decoration-1'}`}>{e.label}</span>
+                      {!has && <span class="sr-only">(not included)</span>}
+                    </li>
+                  );
+                })}
+              </ul>
             )}
+
             <!-- Included in every box -->
-            <ul class="mt-6 grid grid-cols-3 gap-x-2 gap-y-4" aria-label="Also included">
-          {site.included.map((it) => (
+            <p class={`mt-6 text-[10px] font-semibold uppercase tracking-[0.2em] ${dark ? 'text-ivory/45' : 'text-cocoa/50'}`}>{i === 0 ? 'Included' : `Everything in ${pkgs[0].name}`}</p>
+            <ul class="mt-3 grid grid-cols-3 gap-x-2 gap-y-4" aria-label="Also included">
+              {site.included.map((it) => (
                 <li class="flex flex-col items-center gap-1.5 text-center">
-                  <span class={`grid h-10 w-10 place-items-center rounded-full ${dark ? 'bg-ivory/10' : 'bg-cream'}`}><Icon name={it.icon} class="h-5 w-5" /></span>
-                  <span class={`text-[11px] leading-tight ${dark ? 'text-ivory/70' : 'text-cocoa/75'}`}>{incLabel(p, it)}</span>
+                  <span class={`grid h-9 w-9 place-items-center rounded-full ${dark ? 'bg-ivory/10' : 'bg-cream'}`}><Icon name={it.icon} class="h-[18px] w-[18px]" /></span>
+                  <span class={`text-[11px] leading-tight ${muted}`}>{incLabel(p, it)}</span>
                 </li>
               ))}
             </ul>
 
-            <a href="#book" data-package={p.id} class={`btn mt-9 w-full ${dark ? 'btn-light' : 'btn-primary'}`}>
-              Book {p.name} <Icon name="arrow" class="h-4 w-4" />
-            </a>
-            <p class={`mt-3 text-center text-xs ${dark ? 'text-ivory/55' : 'text-cocoa/60'}`}>{p.bestFor}</p>
+            <div class="mt-auto pt-8">
+              <a href="#book" data-package={p.id} data-package-name={p.name} class={`btn w-full ${dark ? 'btn-light' : 'btn-primary'}`}>
+                Book {p.name} <Icon name="arrow" class="h-4 w-4" />
+              </a>
+              <p class={`mt-3 text-center text-xs ${dark ? 'text-ivory/55' : 'text-cocoa/60'}`}>{p.bestFor}</p>
+            </div>
           </article>
         );
       })}
     </div>
 
     <!-- Compact comparison -->
-    <div class="reveal mx-auto mt-16 max-w-3xl overflow-x-auto">
-      <table class="w-full text-left text-sm">
+    <div class="reveal mx-auto mt-20 max-w-4xl overflow-x-auto">
+      <table class="w-full text-left text-xs sm:text-sm">
         <caption class="mb-4 text-left font-display text-2xl">At a glance</caption>
         <thead>
-          <tr class="border-b border-ink/15 text-xs uppercase tracking-[0.15em] text-cocoa/70">
+          <tr class="border-b border-ink/15 text-[10px] sm:text-xs uppercase tracking-[0.06em] sm:tracking-[0.15em] text-cocoa/70">
             <th scope="col" class="py-3 font-medium"><span class="sr-only">Feature</span></th>
-            {pkgs.map((p) => <th scope="col" class="py-3 text-center font-semibold text-ink">{p.name}{p.popular && <span class="ml-1.5 inline-block h-1.5 w-1.5 -translate-y-0.5 rounded-full bg-rose" aria-label="Most popular"></span>}</th>)}
+            {pkgs.map((p) => <th scope="col" class={`px-1 sm:px-2 py-3 text-center font-semibold text-ink ${p.popular ? 'bg-cream/70 rounded-t-xl' : ''}`}>{p.name}{p.popular && <span class="block text-[9px] tracking-[0.2em] text-rose-deep">Most popular</span>}</th>)}
           </tr>
         </thead>
         <tbody class="divide-y divide-ink/10">
-          <tr><th scope="row" class="py-3 font-normal text-cocoa/80">4K camcorders</th>{pkgs.map((p) => <td class="py-3 text-center font-display text-lg">{p.cameras}</td>)}</tr>
-          <tr><th scope="row" class="py-3 font-normal text-cocoa/80">Batteries · record time</th>{pkgs.map((p) => <td class="py-3 text-center">{p.batteries} · {p.hours} hrs</td>)}</tr>
-          <tr><th scope="row" class="py-3 font-normal text-cocoa/80">Memory</th>{pkgs.map((p) => <td class="py-3 text-center">{p.cards} × {p.cardSize}</td>)}</tr>
-          <tr><th scope="row" class="py-3 font-normal text-cocoa/80">Edited highlight film</th>{pkgs.map((p) => <td class="py-3 text-center">{p.filmMin}–{p.filmMax} min</td>)}</tr>
-          <tr><th scope="row" class="py-3 font-normal text-cocoa/80">Rental length</th>{pkgs.map((p) => <td class="py-3 text-center">{daysOf(p)} days{perkOf(p) && <span class="block text-[11px] text-rose-deep">{perkOf(p)!.title}</span>}</td>)}</tr>
-          {site.included.filter((it) => it.icon !== 'calendar').map((it) => (
-            <tr><th scope="row" class="py-3 font-normal text-cocoa/80">{it.label}</th>{pkgs.map(() => <td class="py-3"><Icon name="check" class="mx-auto h-4 w-4 text-sage" label="Included" /></td>)}</tr>
+          {[
+            ['4K camcorders', (p: any) => <span class="font-display text-lg">{p.cameras}</span>],
+            ['Batteries · record time', (p: any) => `${p.batteries} · ${p.hours} hrs`],
+            ['Memory', (p: any) => `${p.cards} × ${p.cardSize}`],
+            ['Edited highlight film', (p: any) => `${p.filmMin}–${p.filmMax} min`],
+            ['Film delivered in', (p: any) => isRush(p) ? <span class="font-medium text-rose-deep">{site.rental.rushWeeks} weeks (rush)</span> : `~${site.rental.deliveryWeeks} weeks`],
+            ['Rental length', (p: any) => <>{daysOf(p)} days{perkOf(p) && <span class="block text-[11px] text-rose-deep">{perkOf(p)!.title}</span>}</>],
+          ].map(([label, fn]: any) => (
+            <tr><th scope="row" class="py-3 pr-2 font-normal text-cocoa/80">{label}</th>{pkgs.map((p) => <td class={`px-1 sm:px-2 py-3 text-center ${p.popular ? 'bg-cream/70' : ''}`}>{fn(p)}</td>)}</tr>
           ))}
-          <tr class="border-t border-ink/20"><th scope="row" class="py-4 font-semibold">Price</th>{pkgs.map((p) => <td class="py-4 text-center font-display text-2xl">{money(p.price)}</td>)}</tr>
+          {allExtras.filter((e) => e.icon !== 'clock').map((e) => (
+            <tr><th scope="row" class="py-3 pr-2 font-normal text-cocoa/80">{e.label}</th>{pkgs.map((p) => <td class={`px-1 sm:px-2 py-3 ${p.popular ? 'bg-cream/70' : ''}`}>{extrasOf(p).some((x) => x.label === e.label) ? <Icon name="check" class="mx-auto h-4 w-4 text-sage" label="Included" /> : <span class="block text-center text-cocoa/30" aria-label="Not included">–</span>}</td>)}</tr>
+          ))}
+          {site.included.filter((it) => it.icon !== 'calendar').map((it) => (
+            <tr><th scope="row" class="py-3 pr-2 font-normal text-cocoa/80">{it.label}</th>{pkgs.map((p) => <td class={`px-1 sm:px-2 py-3 ${p.popular ? 'bg-cream/70' : ''}`}><Icon name="check" class="mx-auto h-4 w-4 text-sage" label="Included" /></td>)}</tr>
+          ))}
+          <tr class="border-t border-ink/20"><th scope="row" class="py-4 font-semibold">Price</th>{pkgs.map((p) => <td class={`px-1 sm:px-2 py-4 text-center font-display text-2xl ${p.popular ? 'bg-cream/70 rounded-b-xl' : ''}`}>{money(p.price)}</td>)}</tr>
         </tbody>
       </table>
     </div>

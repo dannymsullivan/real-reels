@@ -18,18 +18,17 @@ export const site = {
 
   contact: {
     email: 'hello@idocam.com',
-    phone: '(555) 010-2026',
     instagram: 'https://instagram.com/idocam',
     instagramHandle: '@idocam',
     tiktok: 'https://tiktok.com/@idocam',
     pinterest: 'https://pinterest.com/idocam',
   },
 
-  /** Booking form: set `action` to a form endpoint (Formspree, Basin, Netlify, your API…).
-   *  Leave it empty to fall back to a pre-filled email to contact.email. */
+  /** Booking form: handled by Netlify Forms (detected at deploy from the built HTML).
+   *  Submissions show in Netlify → Site → Forms → `name`. Set email notifications there. */
   form: {
-    action: '',
-    method: 'POST',
+    name: 'booking',
+    successMessage: "Thank you! Your inquiry is in. We'll check your date and reply within one business day.",
   },
 
   rental: {
@@ -37,15 +36,16 @@ export const site = {
     arrivesDaysBefore: '3–4',
     returnWithinHours: 72,
     deliveryWeeks: '3–4',
-    shipsTo: ['United States', 'Canada', 'United Kingdom'],
+    rushWeeks: 2,
+    shipsTo: ['United States'],
     carrier: 'UPS',
   },
 
   /** Package data drives the cards, the comparison and the booking form. */
   packages: [
     {
-      id: 'core',
-      name: 'Core',
+      id: 'essentials',
+      name: 'Essentials',
       price: 729,
       blurb: 'One camera, passed hand to hand.',
       cameras: 1,
@@ -55,12 +55,13 @@ export const site = {
       cardSize: '256GB',
       filmMin: 3,
       filmMax: 5,
-      bestFor: 'Up to ~100 guests',
+      bestFor: 'Intimate weddings, up to ~100 guests',
       popular: false,
+      extras: [] as { icon: string; label: string }[],
     },
     {
-      id: 'deluxe',
-      name: 'Deluxe',
+      id: 'signature',
+      name: 'Signature',
       price: 989,
       blurb: 'Two cameras, twice the angles.',
       cameras: 2,
@@ -70,19 +71,35 @@ export const site = {
       cardSize: '256GB',
       filmMin: 5,
       filmMax: 7,
-      bestFor: 'Big weekends & 100+ guests',
+      bestFor: 'Most couples, 100+ guests',
       popular: true,
+      extras: [] as { icon: string; label: string }[],
     },
-    /* Optional third tier, e.g. a honeymoon tier. Uncomment and set a price to enable.
-       `rentalDays` overrides rental.days; `perk` renders as a highlighted row on the card.
     {
-      id: 'heirloom', name: 'Heirloom', price: 0, blurb: 'The wedding, then the honeymoon.',
-      cameras: 2, batteries: 6, hours: 16, cards: 2, cardSize: '256GB', filmMin: 7, filmMax: 10,
-      bestFor: 'Couples heading straight off on a honeymoon', popular: false,
+      id: 'heirloom',
+      name: 'Heirloom',
+      price: 1995,
+      blurb: 'Every angle, then the honeymoon.',
+      cameras: 3,
+      batteries: 9,
+      hours: 24,
+      cards: 3,
+      cardSize: '256GB',
+      filmMin: 10,
+      filmMax: 12,
+      bestFor: 'Big weekends & couples jetting off after',
+      popular: false,
+      /** Overrides rental.days for this tier. */
       rentalDays: 14,
-      perk: { icon: 'plane', title: 'Keep it for the honeymoon', text: '14-day rental so you can film the honeymoon too. Your honeymoon clips get added to your film.' },
+      /** Highlighted perk on the card. */
+      perk: { icon: 'plane', title: 'Keep it for the honeymoon', text: '14-day rental so you can film the honeymoon too. We add your honeymoon clips to your film.' },
+      /** Tier-only extras (icons on the card + rows in the comparison). */
+      extras: [
+        { icon: 'sparkle', label: '60-sec social teaser' },
+        { icon: 'clock', label: 'Rush edit · 2 weeks' },
+        { icon: 'usb', label: 'Keepsake USB in a linen box' },
+      ],
     },
-    */
   ],
 
   /** Included with every package (rendered as icons). */

@@ -1,15 +1,17 @@
 ---
 import { site, money } from '../config/site';
 const r = site.rental;
+const pk = site.packages as readonly any[];
+const heir = pk.find((p) => p.id === 'heirloom');
 const faqs = [
-  { q: 'When does the kit arrive, and how long do we keep it?', a: `It lands ${r.arrivesDaysBefore} days before your wedding and the rental runs ${r.days} days, so there's room for the rehearsal dinner, the big day and the morning-after brunch.` },
+  { q: 'When does the kit arrive, and how long do we keep it?', a: `It lands ${r.arrivesDaysBefore} days before your wedding and the rental runs ${r.days} days, so there's room for the rehearsal dinner, the big day and the morning-after brunch. Heirloom couples keep it for ${heir?.rentalDays ?? 14} days so they can take it on the honeymoon, and we add those clips to the film.` },
   { q: 'Do our guests need to know how to use a camcorder?', a: 'No. Simple guide stickers on the camera show exactly where to press. Record, stop, zoom. If they can use a phone, they can use this.' },
   { q: 'How do we send it back?', a: `Pop everything back in the box, seal it and drop it at any ${r.carrier} location within ${r.returnWithinHours} hours of the wedding. The prepaid label is already inside.` },
-  { q: 'What do we get at the end?', a: `A professionally edited highlight film (length depends on your package) plus every raw clip, organized and downloadable. Expect it about ${r.deliveryWeeks} weeks after we receive the kit.` },
-  { q: 'Where do you ship?', a: `${r.shipsTo.join(', ')}. Shipping both ways is included in the price.` },
+  { q: 'What do we get at the end?', a: `A professionally edited highlight film (length depends on your package) plus every raw clip, organized and downloadable. Expect it about ${r.deliveryWeeks} weeks after we receive the kit, or ${r.rushWeeks} weeks with Heirloom's rush edit.` },
+  { q: 'Where do you ship?', a: `Anywhere in the United States, via ${r.carrier}. Shipping both ways is included in the price. We don't ship internationally yet.` },
   { q: 'What if something gets damaged or lost?', a: 'Accidents happen at parties. Tell us right away and we’ll walk you through it. Our team will always try to recover every second of footage first.' },
   { q: 'Can we use it alongside a photographer or videographer?', a: `Absolutely. ${site.brand} captures the candid, guest’s-eye moments a pro crew can’t be everywhere for. It pairs beautifully with professional coverage.` },
-  { q: 'Which package should we choose?', a: `Core (${money(site.packages[0].price)}) is perfect for intimate weddings. Deluxe (${money(site.packages[1].price)}) doubles the cameras and recording time, ideal for bigger guest lists or multi-day celebrations.` },
+  { q: 'Which package should we choose?', a: `${pk[0].name} (${money(pk[0].price)}) is perfect for intimate weddings. ${pk[1].name} (${money(pk[1].price)}) is our most popular: two cameras and double the recording time for bigger guest lists. ${pk[2].name} (${money(pk[2].price)}) adds a third camera, a 10–12 minute film, a 60-second social teaser, a 2-week rush edit, a keepsake USB in a linen box, and a 14-day rental so it comes on the honeymoon too.` },
 ];
 const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
 ---
