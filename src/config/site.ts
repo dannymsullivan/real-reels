@@ -102,6 +102,14 @@ export const site = {
     },
   ],
 
+  /** TODO: Testimonials are STAND-INS so the page reads naturally. Replace them with
+   *  real, permissioned reviews (names, cities, quotes) before promoting the site. */
+  testimonials: [
+    { quote: 'We watched it on the flight home and cried the whole way. Our friends caught the vow-reading nerves, the cake disaster, my dad dancing. Things we never saw.', names: 'Maya & Jordan', initials: 'M&J', city: 'Asheville, NC', tier: 'Signature' },
+    { quote: 'My grandfather filmed the toasts from his chair at table four. It is the most precious five minutes we own, and the two cameras meant nothing got missed.', names: 'Priya & Sam', initials: 'P&S', city: 'Charleston, SC', tier: 'Signature' },
+    { quote: 'We took the cameras to Maui afterwards. The highlight film ends on our honeymoon sunset, and the 60-second teaser got more likes than our engagement photos.', names: 'Lauren & Chris', initials: 'L&C', city: 'Hudson Valley, NY', tier: 'Heirloom' },
+  ],
+
   /** Included with every package (rendered as icons). */
   included: [
     { icon: 'raw', label: 'Every raw clip, organized' },

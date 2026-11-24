@@ -1,21 +1,15 @@
 ---
-// PLACEHOLDER press names — replace with real features (or logos) when you have them.
-const press = [
-  { name: 'Bridal Gazette', cls: 'font-display italic text-2xl' },
-  { name: 'VOW WEEKLY', cls: 'font-sans font-semibold tracking-[0.3em] text-sm' },
-  { name: 'The Aisle Journal', cls: 'font-display text-2xl' },
-  { name: 'modern ceremony', cls: 'font-sans font-light lowercase tracking-wide text-xl' },
-  { name: 'Rings & Roses', cls: 'font-display italic font-light text-2xl' },
-  { name: 'TOAST', cls: 'font-display font-semibold tracking-[0.25em] text-xl' },
+import Icon from './Icon.astro';
+// Trust strip. Swap in real press logos ("As featured in") once you have genuine features.
+const points = [
+  { icon: 'heart', label: 'Loved by couples across the US' },
+  { icon: 'truck', label: 'Free shipping both ways' },
+  { icon: 'raw', label: 'Every raw clip, yours to keep' },
+  { icon: 'star', label: 'Edited by real people, not an app' },
 ];
 ---
-<section class="border-b border-ink/10 bg-ivory py-8" aria-label="Press (placeholder)">
-  <div class="wrap flex flex-col items-center gap-5 md:flex-row md:gap-10">
-    <p class="shrink-0 text-[0.7rem] uppercase tracking-[0.25em] text-cocoa/70">As seen in <span class="normal-case tracking-normal opacity-70">(placeholder)</span></p>
-    <div class="relative w-full overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
-      <ul class="marquee flex w-max items-center gap-14 text-cocoa/60">
-        {[...press, ...press].map((p, i) => <li class={`${p.cls} whitespace-nowrap`} aria-hidden={i >= press.length ? 'true' : undefined}>{p.name}</li>)}
-      </ul>
-    </div>
-  </div>
+<section class="border-b border-ink/10 bg-ivory py-6" aria-label="Why couples choose us">
+  <ul class="wrap flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm text-cocoa/80">
+    {points.map((p) => <li class="flex items-center gap-2"><Icon name={p.icon} class="h-4 w-4 text-rose-deep" />{p.label}</li>)}
+  </ul>
 </section>

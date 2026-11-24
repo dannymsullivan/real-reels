@@ -1,27 +1,26 @@
 ---
 import Icon from './Icon.astro';
-// PLACEHOLDER testimonials — replace with real, permissioned reviews before launch.
-const quotes = [
-  { q: 'We watched it on the flight home and cried the whole way. Our friends caught things we never saw.', who: 'Placeholder Couple', where: 'Asheville, NC', initials: 'A&J' },
-  { q: 'My grandfather filmed the toasts. It is the most precious four minutes we own.', who: 'Placeholder Couple', where: 'Toronto, ON', initials: 'M&D' },
-  { q: 'Cheaper than a videographer, and honestly more “us”. Everyone wanted a turn with the camera.', who: 'Placeholder Couple', where: 'Hudson Valley, NY', initials: 'S&L' },
-];
+import { site } from '../config/site';
+// Quotes live in site.ts → testimonials (stand-ins until real reviews are in; see TODO there).
+const quotes = site.testimonials;
 ---
 <section id="love" class="section bg-cream/70">
   <div class="wrap">
     <div class="mx-auto max-w-2xl text-center">
-      <p class="eyebrow reveal">Kind words <span class="normal-case tracking-normal text-cocoa/60">(placeholder)</span></p>
+      <p class="eyebrow reveal">Kind words</p>
       <h2 class="reveal mt-4 text-[clamp(2.2rem,4.6vw,3.9rem)] font-light leading-[1.04]" style="--d:100ms">The film they <em class="italic text-rose-deep">actually</em> rewatch.</h2>
     </div>
     <ul class="mt-14 grid gap-5 md:grid-cols-3">
       {quotes.map((t, i) => (
         <li class="reveal flex flex-col rounded-[1.75rem] bg-ivory p-8 shadow-sm" style={`--d:${i * 120}ms`}>
-          <div class="flex gap-0.5 text-gold" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map(() => <Icon name="star" class="h-4 w-4" />)}</div>
-          <blockquote class="mt-5 flex-1 font-display text-xl leading-snug">“{t.q}”</blockquote>
+          <div class="flex items-center justify-between">
+            <div class="flex gap-0.5 text-gold" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map(() => <Icon name="star" class="h-4 w-4" />)}</div>
+            <span class="rounded-full bg-cream px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.15em] text-cocoa/70">{t.tier} box</span>
+          </div>
+          <blockquote class="mt-5 flex-1 font-display text-xl leading-snug">“{t.quote}”</blockquote>
           <footer class="mt-6 flex items-center gap-3">
-            <span class="grid h-11 w-11 place-items-center rounded-full bg-blush font-display text-sm italic text-rose-deep">{t.initials}</span>
-            <span class="text-sm"><span class="block font-semibold">{t.who}</span><span class="text-cocoa/70">{t.where}</span></span>
-            <span class="ml-auto rounded-full border border-dashed border-cocoa/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-cocoa/60">Sample</span>
+            <span class="grid h-11 w-11 place-items-center rounded-full bg-blush font-display text-sm italic text-rose-deep" aria-hidden="true">{t.initials}</span>
+            <span class="text-sm"><span class="block font-semibold">{t.names}</span><span class="text-cocoa/70">{t.city}</span></span>
           </footer>
         </li>
       ))}
