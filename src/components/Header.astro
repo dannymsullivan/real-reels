@@ -1,24 +1,29 @@
 ---
 import { site } from '../config/site';
+interface Props { solid?: boolean }
+const { solid = false } = Astro.props;
+// Root-relative anchors so the nav works from /about too (same-page scroll on the home page).
 const links = [
-  { href: '#how', label: 'How it works' },
-  { href: '#packages', label: 'Packages' },
-  { href: '#box', label: "What's in the box" },
-  { href: '#gallery', label: 'Gallery' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '/#how', label: 'How it works' },
+  { href: '/#packages', label: 'Packages' },
+  { href: '/#box', label: "What's in the box" },
+  { href: '/#gallery', label: 'Gallery' },
+  { href: '/#faq', label: 'FAQ' },
+  { href: '/about', label: 'About' },
 ];
+const here = Astro.url.pathname.replace(/\/$/, '');
 ---
-<header id="top-nav" class="fixed inset-x-0 top-0 z-50 text-ivory transition-[background-color,color,box-shadow,backdrop-filter] duration-500 data-[solid=true]:bg-ivory/85 data-[solid=true]:text-ink data-[solid=true]:shadow-[0_1px_0_rgb(42_33_29/0.08)] data-[solid=true]:backdrop-blur-md">
+<header id="top-nav" data-always-solid={solid ? "true" : undefined} data-solid={solid ? "true" : undefined} class="fixed inset-x-0 top-0 z-50 text-ivory transition-[background-color,color,box-shadow,backdrop-filter] duration-500 data-[solid=true]:bg-ivory/85 data-[solid=true]:text-ink data-[solid=true]:shadow-[0_1px_0_rgb(42_33_29/0.08)] data-[solid=true]:backdrop-blur-md">
   <nav class="wrap flex h-[4.5rem] items-center justify-between" aria-label="Main">
-    <a href="#" class="block shrink-0" aria-label={`${site.brand} home`}>
+    <a href="/" class="block shrink-0" aria-label={`${site.brand} home`}>
       <img src="/brand/wordmark-light.svg" alt={site.brand} width="500" height="110" class="h-8 w-auto sm:h-9 in-data-[solid=true]:hidden" />
       <img src="/brand/wordmark.svg" alt={site.brand} width="500" height="110" class="hidden h-8 w-auto sm:h-9 in-data-[solid=true]:block" />
     </a>
     <ul class="hidden items-center gap-8 text-[0.88rem] font-medium lg:flex">
-      {links.map((l) => <li><a class="opacity-85 transition hover:opacity-100 relative after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all hover:after:w-full" href={l.href}>{l.label}</a></li>)}
+      {links.map((l) => <li><a class="opacity-85 transition hover:opacity-100 relative after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all hover:after:w-full" href={l.href} aria-current={l.href === here ? "page" : undefined}>{l.label}</a></li>)}
     </ul>
     <div class="flex items-center gap-3">
-      <a href="#book" class="btn btn-light !px-5 !py-2.5 text-sm hidden sm:inline-flex in-data-[solid=true]:!bg-ink in-data-[solid=true]:!text-ivory">Book your date</a>
+      <a href="/#book" class="btn btn-light !px-5 !py-2.5 text-sm hidden sm:inline-flex in-data-[solid=true]:!bg-ink in-data-[solid=true]:!text-ivory">Book your date</a>
       <button id="menu-btn" class="lg:hidden -mr-2 p-2" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
       </button>
@@ -27,7 +32,7 @@ const links = [
   <div id="mobile-menu" hidden class="lg:hidden border-t border-ink/10 bg-ivory text-ink">
     <ul class="wrap flex flex-col py-4 font-display text-2xl">
       {links.map((l) => <li><a class="block py-2.5" href={l.href}>{l.label}</a></li>)}
-      <li class="pt-3"><a href="#book" class="btn btn-primary w-full">Book your date</a></li>
+      <li class="pt-3"><a href="/#book" class="btn btn-primary w-full">Book your date</a></li>
     </ul>
   </div>
 </header>
@@ -35,7 +40,7 @@ const links = [
   const nav = document.getElementById('top-nav')!;
   const btn = document.getElementById('menu-btn')!;
   const menu = document.getElementById('mobile-menu')!;
-  const setSolid = () => nav.dataset.solid = String(window.scrollY > window.innerHeight * 0.75 || !menu.hidden);
+  const setSolid = () => nav.dataset.solid = String(nav.dataset.alwaysSolid === 'true' || window.scrollY > window.innerHeight * 0.75 || !menu.hidden);
   addEventListener('scroll', setSolid, { passive: true }); setSolid();
   btn.addEventListener('click', () => {
     menu.hidden = !menu.hidden;

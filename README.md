@@ -64,6 +64,15 @@ Defined in `src/config/site.ts` → `packages`:
   ("Keep it for the honeymoon": `rentalDays: 14`, honeymoon clips added to the film, plane icon).
 Cards, the comparison table, booking-form options, FAQ and JSON-LD all read from this list.
 
+## About page (`/about`) photo slots
+Founder story lives in `src/pages/about.astro`. Drop Danny's real photos into `public/media/about/`
+with these names (neutral placeholders are there now; `python3 scripts/make_about_placeholders.py` regenerates them):
+- `family.jpg`: Danny & family portrait, page hero (4:5 portrait, 1200×1500+)
+- `wedding-1.jpg`, `wedding-4.jpg`: wedding photography (4:5 portrait)
+- `wedding-2.jpg`, `wedding-3.jpg`: wedding photography (3:2 landscape, 1800×1200+)
+- `booth-1.jpg` (4:5 portrait), `booth-2.jpg` (3:2 landscape): photo booth company
+Have fewer photos? Delete the unused files and the grid adapts at build time. Update alt text in `about.astro`.
+
 ## Placeholders to replace before launch
 - Press strip names (`PressStrip.astro`) are fictional placeholders.
 - Testimonials (`Testimonials.astro`) are labeled samples.

@@ -1,0 +1,206 @@
+---
+/**
+ * About page: founder story (Danny Sullivan).
+ *
+ * PHOTO SLOTS: drop real photos into public/media/about/ with these exact names
+ * (neutral placeholders are there now; regenerate with `python3 scripts/make_about_placeholders.py`):
+ *   family.jpg            Danny & family portrait, page hero      4:5 portrait (1200×1500+)
+ *   wedding-1.jpg         Danny's wedding photography             4:5 portrait
+ *   wedding-2.jpg         Danny's wedding photography             3:2 landscape (1800×1200+)
+ *   wedding-3.jpg         Danny's wedding photography             3:2 landscape
+ *   wedding-4.jpg         Danny's wedding photography             4:5 portrait
+ *   booth-1.jpg           Photo booth company                     4:5 portrait
+ *   booth-2.jpg           Photo booth company                     3:2 landscape
+ * Only 2–3 wedding shots or 1 booth shot? Delete the unused files; the grid adapts automatically.
+ * Edit the alt text below once the real photos are in.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import Icon from '../components/Icon.astro';
+import { site, money, fromPrice } from '../config/site';
+
+const exists = (src: string) => fs.existsSync(path.join(process.cwd(), 'public', src));
+const weddings = [
+  { src: '/media/about/wedding-1.jpg', alt: 'A wedding moment photographed by Danny Sullivan', w: 1200, h: 1500 },
+  { src: '/media/about/wedding-2.jpg', alt: 'A wedding moment photographed by Danny Sullivan', w: 1800, h: 1200 },
+  { src: '/media/about/wedding-3.jpg', alt: 'A wedding moment photographed by Danny Sullivan', w: 1800, h: 1200 },
+  { src: '/media/about/wedding-4.jpg', alt: 'A wedding moment photographed by Danny Sullivan', w: 1200, h: 1500 },
+].filter((p) => exists(p.src));
+const booths = [
+  { src: '/media/about/booth-1.jpg', alt: "Wedding guests in Danny's photo booth", w: 1200, h: 1500 },
+  { src: '/media/about/booth-2.jpg', alt: "Wedding guests in Danny's photo booth", w: 1800, h: 1200 },
+].filter((p) => exists(p.src));
+const family = { src: '/media/about/family.jpg', alt: 'Danny Sullivan, founder of I Do Cam, with his family in Raleigh, North Carolina' };
+
+const chapters = [
+  { icon: 'heart', title: 'Special ed teacher', sub: '& pro baseball player' },
+  { icon: 'camera', title: 'Wedding photographer', sub: 'Behind the lens' },
+  { icon: 'sparkle', title: 'Photo booth owner', sub: 'Guests in the frame' },
+  { icon: 'film', title: 'AI engineer', sub: 'Building the tools' },
+  { icon: 'camcorder', title: site.brand, sub: 'All of it, together' },
+];
+const promise = [
+  { icon: 'camcorder', title: 'Your guests film', text: 'A real 4K camcorder, passed hand to hand. No apps, no uploads.' },
+  { icon: 'sparkle', title: 'Smart tools sort', text: 'Technology helps us organize hours of clips, so nothing gets lost.' },
+  { icon: 'scissors', title: 'Real people edit', text: 'An editor watches your footage and cuts your film by hand. Not an app.' },
+];
+const wGrid = weddings.length >= 4 ? 'md:grid-cols-[1fr_1.35fr_1fr]' : weddings.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2';
+---
+<Base title={`About ${site.brand}: the story behind the camera`} description={`Founder Danny Sullivan went from special ed teacher and pro baseball player to wedding photographer, photo booth owner and AI engineer. Here's why he built ${site.brand} from Raleigh, NC.`}>
+  <Header solid />
+  <main id="main" class="overflow-x-clip bg-ivory pt-[4.5rem]">
+
+    <!-- Hero: founder & family portrait -->
+    <section class="section !pt-16 sm:!pt-20">
+      <div class="wrap grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+        <div>
+          <p class="eyebrow reveal">Our story</p>
+          <h1 class="reveal mt-5 text-[clamp(2.6rem,6vw,5.2rem)] font-light leading-[1.0]" style="--d:100ms">
+            The best moments are never <em class="italic text-rose-deep">the posed ones.</em>
+          </h1>
+          <span class="reveal mt-7 flex w-20 flex-col gap-[3px]" aria-hidden="true" style="--d:150ms"><span class="h-[3px] rounded-full bg-rose"></span><span class="h-[3px] rounded-full bg-gold"></span><span class="h-[3px] rounded-full bg-sage"></span></span>
+          <p class="reveal mt-7 max-w-xl text-lg leading-relaxed text-cocoa/85" style="--d:200ms">
+            Hi, I'm Danny Sullivan, the founder of {site.brand}. My path here has been anything but a straight line, but every stop on it taught me something about how people want to remember the days that matter.
+          </p>
+          <p class="reveal mt-6 inline-flex items-center gap-2 text-sm text-cocoa/70" style="--d:250ms"><Icon name="pin" class="h-4 w-4 text-rose-deep" />Raleigh, North Carolina · shipping across the US</p>
+        </div>
+        <figure class="reveal relative mx-auto w-full max-w-md lg:max-w-none" style="--d:150ms">
+          <div class="absolute -inset-3 -z-0 rotate-[2.5deg] rounded-[2.25rem] bg-blush/50" aria-hidden="true"></div>
+          <img src={family.src} alt={family.alt} width="1200" height="1500" class="relative aspect-[4/5] w-full rounded-[2rem] object-cover shadow-2xl shadow-ink/20" />
+          <figcaption class="absolute -bottom-5 left-6 rounded-full bg-ivory px-4 py-2 font-display text-base italic shadow-lg">Danny &amp; family, Raleigh, NC</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Chapters -->
+    <section class="border-y border-ink/10 bg-cream/60 py-12" aria-label="Danny's path">
+      <ol class="wrap grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
+        {chapters.map((c, i) => (
+          <li class={`reveal relative flex flex-col items-center text-center ${i === chapters.length - 1 ? 'col-span-2 sm:col-span-1' : ''}`} style={`--d:${i * 90}ms`}>
+            {i < chapters.length - 1 && <span class="absolute left-[calc(50%+2rem)] right-[calc(-50%+2rem)] top-7 hidden border-t border-dashed border-cocoa/30 lg:block" aria-hidden="true"></span>}
+            <span class={`grid h-14 w-14 place-items-center rounded-full ${i === chapters.length - 1 ? 'bg-ink text-ivory' : 'bg-ivory text-rose-deep shadow-sm'}`}><Icon name={c.icon} class="h-6 w-6" /></span>
+            <span class="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-cocoa/55">Chapter {i + 1}</span>
+            <span class="mt-1 font-display text-xl leading-tight">{c.title}</span>
+            <span class="text-xs text-cocoa/70">{c.sub}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Chapter 1 -->
+    <section class="section !pb-0">
+      <div class="wrap max-w-3xl">
+        <p class="eyebrow reveal">Where it started</p>
+        <p class="reveal mt-5 font-display text-[clamp(1.5rem,2.6vw,2.1rem)] font-light leading-snug" style="--d:100ms">
+          I started out as a special education teacher and a professional baseball player. Two very different jobs that taught me the same thing: people shine when they feel included, and the moments that matter most are rarely the ones you planned.
+        </p>
+      </div>
+    </section>
+
+    <!-- Chapter 2: wedding photography -->
+    <section class="section">
+      <div class="wrap">
+        <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="eyebrow reveal">Behind the lens</p>
+            <h2 class="reveal mt-4 text-[clamp(2rem,4vw,3.4rem)] font-light leading-[1.05]" style="--d:100ms">Wedding after wedding, <em class="italic text-rose-deep">the guests had the best angles.</em></h2>
+          </div>
+          <p class="reveal text-lg leading-relaxed text-cocoa/85" style="--d:200ms">
+            Then I picked up a camera and became a professional wedding photographer. Standing at the front of all those ceremonies showed me something I couldn't unsee: the best moments almost never happened when people were posing. They happened in between, when a groomsman pulled out his phone during the toast, or a grandmother filmed the first dance from her seat. Guests were catching things I was never in position to see.
+          </p>
+        </div>
+        {weddings.length > 0 && (
+          <div class={`mt-12 grid grid-cols-2 gap-3 sm:gap-4 ${wGrid}`}>
+            {weddings.length >= 4 ? (
+              <>
+                <img src={weddings[0].src} alt={weddings[0].alt} width={weddings[0].w} height={weddings[0].h} loading="lazy" decoding="async" class="reveal aspect-[4/5] h-full w-full rounded-[1.5rem] object-cover" />
+                <div class="col-span-2 row-start-1 grid gap-3 sm:gap-4 md:col-span-1 md:row-start-auto">
+                  <img src={weddings[1].src} alt={weddings[1].alt} width={weddings[1].w} height={weddings[1].h} loading="lazy" decoding="async" class="reveal aspect-[3/2] w-full rounded-[1.5rem] object-cover" style="--d:80ms" />
+                  <img src={weddings[2].src} alt={weddings[2].alt} width={weddings[2].w} height={weddings[2].h} loading="lazy" decoding="async" class="reveal aspect-[3/2] w-full rounded-[1.5rem] object-cover" style="--d:160ms" />
+                </div>
+                <img src={weddings[3].src} alt={weddings[3].alt} width={weddings[3].w} height={weddings[3].h} loading="lazy" decoding="async" class="reveal aspect-[4/5] h-full w-full rounded-[1.5rem] object-cover" style="--d:240ms" />
+              </>
+            ) : weddings.map((p, i) => (
+              <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" class={`reveal aspect-[4/5] w-full rounded-[1.5rem] object-cover ${weddings.length === 3 && i === 2 ? 'col-span-2 md:col-span-1' : ''}`} style={`--d:${i * 80}ms`} />
+            ))}
+          </div>
+        )}
+        <p class="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-cocoa/55">Photos from Danny's wedding photography years</p>
+      </div>
+    </section>
+
+    <!-- Chapter 3: photo booth -->
+    <section class="section bg-cream/60">
+      <div class="wrap grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+        <div class={`grid gap-3 sm:gap-4 ${booths.length > 1 ? 'grid-cols-[0.8fr_1fr] items-end' : ''}`}>
+          {booths.map((p, i) => (
+            <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" class={`reveal w-full rounded-[1.5rem] object-cover shadow-xl shadow-ink/10 ${p.w > p.h ? 'aspect-[3/2]' : 'aspect-[4/5]'} ${i === 1 ? 'mb-10 rotate-[1.5deg]' : '-rotate-[1.5deg]'}`} style={`--d:${i * 100}ms`} />
+          ))}
+        </div>
+        <div>
+          <p class="eyebrow reveal">The photo booth years</p>
+          <h2 class="reveal mt-4 text-[clamp(2rem,4vw,3.4rem)] font-light leading-[1.05]" style="--d:100ms">Guests don't want to watch the memory. <em class="italic text-rose-deep">They want to be in it.</em></h2>
+          <p class="reveal mt-6 text-lg leading-relaxed text-cocoa/85" style="--d:200ms">
+            Next, I owned a photo booth company, and it taught me the other half of the story. Hand people a camera and a reason to be silly, and the whole room comes alive. Everyone wanted to be part of the memory, not just a face in the background.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 4: why I Do Cam -->
+    <section class="section relative bg-ink text-ivory">
+      <div class="absolute inset-x-0 top-0 flex flex-col gap-[3px] opacity-70" aria-hidden="true"><span class="h-[3px] bg-rose"></span><span class="h-[3px] bg-gold"></span><span class="h-[3px] bg-sage"></span></div>
+      <div class="wrap">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="eyebrow !text-blush reveal">Why I built {site.brand}</p>
+          <h2 class="reveal mt-4 text-[clamp(2.2rem,4.6vw,3.9rem)] font-light leading-[1.04]" style="--d:100ms">Guest-shot footage. <em class="italic text-blush">Human-made films.</em></h2>
+          <p class="reveal mt-6 text-lg leading-relaxed text-ivory/80" style="--d:200ms">
+            Today I'm an AI engineer, and {site.brand} is where every chapter comes together. We put a real camcorder in your guests' hands, then pair what they capture with real human editing. Technology helps behind the scenes, sorting and organizing hours of clips so nothing slips through. But your film is made by people, not an app. An editor chooses every laugh, every glance and every song cue.
+          </p>
+        </div>
+        <ul class="mx-auto mt-14 grid max-w-5xl gap-4 md:grid-cols-3">
+          {promise.map((p, i) => (
+            <li class="reveal rounded-[1.75rem] border border-ivory/10 bg-ivory/[0.04] p-7" style={`--d:${i * 120}ms`}>
+              <span class="grid h-12 w-12 place-items-center rounded-full bg-ivory/10 text-blush"><Icon name={p.icon} class="h-6 w-6" /></span>
+              <p class="mt-5 font-display text-2xl">{p.title}</p>
+              <p class="mt-2 text-sm text-ivory/70">{p.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Raleigh + signature -->
+    <section class="section">
+      <div class="wrap max-w-3xl text-center">
+        <span class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-blush/60 text-rose-deep"><Icon name="pin" class="h-5 w-5" /></span>
+        <p class="reveal mt-6 font-display text-[clamp(1.5rem,2.6vw,2.1rem)] font-light leading-snug">
+          My family and I live in Raleigh, North Carolina, and from our home here we ship kits to couples all across the US. However you got here, thank you for trusting us with the day you'll want to relive forever.
+        </p>
+        <p class="reveal mt-8 font-display text-4xl italic text-rose-deep" style="--d:120ms">Danny</p>
+        <p class="text-sm text-cocoa/70">Danny Sullivan, Founder</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="relative isolate overflow-hidden bg-ink text-ivory">
+      <img src="/media/couple-watching-film.jpg" alt="" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover opacity-50" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-ink/90 via-ink/70 to-rose-deep/50"></div>
+      <div class="wrap section text-center">
+        <p class="eyebrow !text-blush reveal">Ready when you are</p>
+        <h2 class="reveal mx-auto mt-4 max-w-3xl text-[clamp(2.4rem,5.4vw,4.6rem)] font-light leading-[1.0]" style="--d:100ms">Hand them the camera. <em class="italic text-blush">We'll handle the rest.</em></h2>
+        <p class="reveal mx-auto mt-5 max-w-lg text-ivory/80" style="--d:200ms">Three boxes, from {money(fromPrice)}. Free shipping both ways, anywhere in the US.</p>
+        <div class="reveal mt-9 flex flex-wrap justify-center gap-3" style="--d:300ms">
+          <a href="/#packages" class="btn btn-light">See the packages</a>
+          <a href="/#book" class="btn btn-ghost text-ivory">Book your date <Icon name="arrow" class="h-4 w-4" /></a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+  <MobileBar />
+</Base>

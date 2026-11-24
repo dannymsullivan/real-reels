@@ -3,7 +3,7 @@ import { money, fromPrice } from '../config/site';
 ---
 <div id="mobile-bar" class="fixed inset-x-3 bottom-3 z-40 flex translate-y-[150%] items-center justify-between gap-3 rounded-full bg-ink/95 py-2 pl-5 pr-2 text-ivory shadow-2xl backdrop-blur transition-transform duration-500 sm:hidden" style="padding-bottom:max(.5rem, env(safe-area-inset-bottom))">
   <span class="text-sm">From <strong class="font-display text-lg">{money(fromPrice)}</strong></span>
-  <a href="#book" class="btn btn-light !py-2.5 !px-5 text-sm">Book your date</a>
+  <a href="/#book" class="btn btn-light !py-2.5 !px-5 text-sm">Book your date</a>
 </div>
 <script>
   const bar = document.getElementById('mobile-bar')!;
