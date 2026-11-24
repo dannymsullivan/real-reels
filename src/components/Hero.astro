@@ -6,9 +6,21 @@ import { site, money, fromPrice } from '../config/site';
   <img src="/media/hero-poster.jpg" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" decoding="async" />
   <video id="hero-video" class="absolute inset-0 -z-10 h-full w-full object-cover motion-reduce:hidden"
     autoplay muted loop playsinline preload="metadata" poster="/media/hero-poster.jpg" aria-hidden="true" tabindex="-1">
+    <!-- Small screens get a ~1 MB 960px cut; desktop keeps 1080p. Data-saver is handled below. -->
+    <source src="/media/hero-960.mp4" type="video/mp4" media="(max-width: 767px)" data-light />
+    <source src="/media/hero-960.webm" type="video/webm" media="(max-width: 767px)" data-light />
     <source src="/media/hero.webm" type="video/webm" />
     <source src="/media/hero.mp4" type="video/mp4" />
   </video>
+  <script is:inline>
+    (function () {
+      var v = document.getElementById('hero-video');
+      if (!v || !(navigator.connection && navigator.connection.saveData)) return;
+      v.querySelectorAll('source:not([data-light])').forEach(function (s) { s.remove(); });
+      v.querySelectorAll('source[data-light]').forEach(function (s) { s.removeAttribute('media'); });
+      v.load();
+    })();
+  </script>
   <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/20 to-ink/50"></div>
   <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/75 via-ink/35 to-transparent max-sm:from-ink/50 max-sm:via-ink/30"></div>
 

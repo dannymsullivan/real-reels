@@ -31,7 +31,9 @@ Swap in real assets by **overwriting the file with the same name** and keeping t
 | `guests-filming-reception.jpg` | A guest filming the reception on the camcorder | 4:5, 1200×1500 |
 | `getting-ready.jpg` | Bride laughing while a bridesmaid films her getting ready | 4:5, 1200×1500 |
 | `ceremony.jpg` | Guest filming an outdoor ceremony from the rows | 3:2, 1800×1200 |
-| `dance-floor.jpg` | Packed dance floor, string lights | 3:2, 1800×1200 |
+| `kids-filming.jpg` | Why collage: kid filming with the camcorder at an outdoor reception | 3:2, 1600×1067 |
+| `hero-960.mp4/.webm` | Lighter hero for phones / data-saver (~1 MB) | 16:9, 960px |
+| `band.webm/.mp4`, `band-960.mp4`, `band-poster.jpg` | Band-reel section video | 16:9 |
 | `couple-watching-film.jpg` | Couple on the sofa watching their wedding film (also Book section bg) | 4:5, 1200×1500 |
 | `kit-flatlay.jpg` | Top-down flat-lay on linen: camcorder, 2 batteries, SD card, instruction card, drawstring bag, charger + cable | 1:1, 1600×1600 |
 | `booking.jpg` | Couple booking on a laptop (How it works step 1) | 4:5, 1200×1500 |
