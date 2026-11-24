@@ -1,0 +1,36 @@
+---
+import { site, money } from '../config/site';
+const r = site.rental;
+const faqs = [
+  { q: 'When does the kit arrive, and how long do we keep it?', a: `It lands ${r.arrivesDaysBefore} days before your wedding and the rental runs ${r.days} days, so there's room for the rehearsal dinner, the big day and the morning-after brunch.` },
+  { q: 'Do our guests need to know how to use a camcorder?', a: 'No. Simple guide stickers on the camera show exactly where to press. Record, stop, zoom. If they can use a phone, they can use this.' },
+  { q: 'How do we send it back?', a: `Pop everything back in the box, seal it and drop it at any ${r.carrier} location within ${r.returnWithinHours} hours of the wedding. The prepaid label is already inside.` },
+  { q: 'What do we get at the end?', a: `A professionally edited highlight film (length depends on your package) plus every raw clip, organized and downloadable. Expect it about ${r.deliveryWeeks} weeks after we receive the kit.` },
+  { q: 'Where do you ship?', a: `${r.shipsTo.join(', ')}. Shipping both ways is included in the price.` },
+  { q: 'What if something gets damaged or lost?', a: 'Accidents happen at parties. Tell us right away and we’ll walk you through it. Our team will always try to recover every second of footage first.' },
+  { q: 'Can we use it alongside a photographer or videographer?', a: `Absolutely. ${site.brand} captures the candid, guest’s-eye moments a pro crew can’t be everywhere for. It pairs beautifully with professional coverage.` },
+  { q: 'Which package should we choose?', a: `Core (${money(site.packages[0].price)}) is perfect for intimate weddings. Deluxe (${money(site.packages[1].price)}) doubles the cameras and recording time, ideal for bigger guest lists or multi-day celebrations.` },
+];
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+---
+<section id="faq" class="section bg-ivory">
+  <div class="wrap grid gap-12 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
+    <div>
+      <p class="eyebrow reveal">FAQ</p>
+      <h2 class="reveal mt-4 text-[clamp(2.2rem,4.6vw,3.9rem)] font-light leading-[1.04]" style="--d:100ms">Good <em class="italic text-rose-deep">questions.</em></h2>
+      <p class="reveal mt-5 max-w-xs text-cocoa/80" style="--d:200ms">Still wondering? Email <a class="underline decoration-rose underline-offset-4" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
+    </div>
+    <div class="divide-y divide-ink/10 border-y border-ink/10">
+      {faqs.map((f, i) => (
+        <details class="reveal group py-1" style={`--d:${i * 50}ms`}>
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-xl sm:text-2xl">
+            {f.q}
+            <span class="faq-plus grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/15 text-lg transition-transform duration-300" aria-hidden="true">+</span>
+          </summary>
+          <p class="max-w-2xl pb-6 text-cocoa/85">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</section>

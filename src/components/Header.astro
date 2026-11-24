@@ -1,0 +1,47 @@
+---
+import { site } from '../config/site';
+const links = [
+  { href: '#how', label: 'How it works' },
+  { href: '#packages', label: 'Packages' },
+  { href: '#box', label: "What's in the box" },
+  { href: '#gallery', label: 'Gallery' },
+  { href: '#faq', label: 'FAQ' },
+];
+---
+<header id="top-nav" class="fixed inset-x-0 top-0 z-50 text-ivory transition-[background-color,color,box-shadow,backdrop-filter] duration-500 data-[solid=true]:bg-ivory/85 data-[solid=true]:text-ink data-[solid=true]:shadow-[0_1px_0_rgb(42_33_29/0.08)] data-[solid=true]:backdrop-blur-md">
+  <nav class="wrap flex h-[4.5rem] items-center justify-between" aria-label="Main">
+    <a href="#" class="group flex items-center gap-2 font-display text-[1.6rem] italic leading-none" aria-label={`${site.brand} home`}>
+      <span class="rec-dot inline-block h-2 w-2 rounded-full bg-rec" aria-hidden="true"></span>
+      {site.brand}
+    </a>
+    <ul class="hidden items-center gap-8 text-[0.88rem] font-medium lg:flex">
+      {links.map((l) => <li><a class="opacity-85 transition hover:opacity-100 relative after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all hover:after:w-full" href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <div class="flex items-center gap-3">
+      <a href="#book" class="btn btn-light !px-5 !py-2.5 text-sm hidden sm:inline-flex in-data-[solid=true]:!bg-ink in-data-[solid=true]:!text-ivory">Book your date</a>
+      <button id="menu-btn" class="lg:hidden -mr-2 p-2" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div id="mobile-menu" hidden class="lg:hidden border-t border-ink/10 bg-ivory text-ink">
+    <ul class="wrap flex flex-col py-4 font-display text-2xl">
+      {links.map((l) => <li><a class="block py-2.5" href={l.href}>{l.label}</a></li>)}
+      <li class="pt-3"><a href="#book" class="btn btn-primary w-full">Book your date</a></li>
+    </ul>
+  </div>
+</header>
+<script>
+  const nav = document.getElementById('top-nav')!;
+  const btn = document.getElementById('menu-btn')!;
+  const menu = document.getElementById('mobile-menu')!;
+  const setSolid = () => nav.dataset.solid = String(window.scrollY > window.innerHeight * 0.75 || !menu.hidden);
+  addEventListener('scroll', setSolid, { passive: true }); setSolid();
+  btn.addEventListener('click', () => {
+    menu.hidden = !menu.hidden;
+    btn.setAttribute('aria-expanded', String(!menu.hidden));
+    btn.setAttribute('aria-label', menu.hidden ? 'Open menu' : 'Close menu');
+    setSolid();
+  });
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); setSolid(); }));
+</script>

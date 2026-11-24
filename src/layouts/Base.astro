@@ -1,0 +1,77 @@
+---
+import '../styles/global.css';
+import { site, fromPrice } from '../config/site';
+interface Props { title?: string; description?: string; image?: string }
+const {
+  title = `${site.brand} — Guest-filmed wedding videos, beautifully edited`,
+  description = site.description,
+  image = '/media/og-image.jpg',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const ogImage = new URL(image, Astro.site ?? site.url).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: site.brand,
+      url: site.url,
+      email: site.contact.email,
+      sameAs: [site.contact.instagram, site.contact.tiktok, site.contact.pinterest],
+    },
+    ...site.packages.map((p) => ({
+      '@type': 'Product',
+      name: `${site.brand} ${p.name} wedding camcorder package`,
+      description: `${p.cameras} 4K camcorder${p.cameras > 1 ? 's' : ''}, ${p.hours} hours of recording, a ${p.filmMin}–${p.filmMax} minute edited highlight film and all raw footage.`,
+      brand: { '@type': 'Brand', name: site.brand },
+      image: ogImage,
+      offers: { '@type': 'Offer', price: p.price, priceCurrency: site.currency, availability: 'https://schema.org/InStock', url: `${site.url}/#packages` },
+    })),
+  ],
+};
+---
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#f8f3ea" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href="/media/hero-poster.jpg" fetchpriority="high" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.brand} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="keywords" content={`wedding camcorder rental, guest filmed wedding video, wedding video kit, affordable wedding videographer alternative, from $${fromPrice}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+  </head>
+  <body class="grain">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] btn btn-light">Skip to content</a>
+    <slot />
+    <script>
+      // Scroll reveal
+      const els = document.querySelectorAll<HTMLElement>('.reveal');
+      if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach((e) => e.classList.add('is-in'));
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        els.forEach((e) => io.observe(e));
+      }
+    </script>
+  </body>
+</html>

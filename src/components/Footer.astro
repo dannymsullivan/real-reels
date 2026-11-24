@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../config/site';
+const year = new Date().getFullYear();
+---
+<footer class="bg-ivory pb-28 pt-20 text-ink sm:pb-12">
+  <div class="wrap">
+    <div class="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+      <div>
+        <a href="#" class="flex items-center gap-2 font-display text-4xl italic"><span class="rec-dot h-2.5 w-2.5 rounded-full bg-rec" aria-hidden="true"></span>{site.brand}</a>
+        <p class="mt-4 max-w-xs text-cocoa/80">{site.tagline}</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="eyebrow">Explore</p>
+        <ul class="mt-4 space-y-2 text-sm text-cocoa/85">
+          <li><a class="hover:text-ink" href="#how">How it works</a></li>
+          <li><a class="hover:text-ink" href="#packages">Packages</a></li>
+          <li><a class="hover:text-ink" href="#box">What's in the box</a></li>
+          <li><a class="hover:text-ink" href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="eyebrow">Say hello</p>
+        <ul class="mt-4 space-y-2 text-sm text-cocoa/85">
+          <li><a class="inline-flex items-center gap-2 hover:text-ink" href={`mailto:${site.contact.email}`}><Icon name="mail" class="h-4 w-4" />{site.contact.email}</a></li>
+          <li><a class="hover:text-ink" href={`tel:${site.contact.phone.replace(/[^\d+]/g, '')}`}>{site.contact.phone}</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Follow</p>
+        <ul class="mt-4 space-y-2 text-sm text-cocoa/85">
+          <li><a class="inline-flex items-center gap-2 hover:text-ink" href={site.contact.instagram} rel="noopener"><Icon name="instagram" class="h-4 w-4" />{site.contact.instagramHandle}</a></li>
+          <li><a class="hover:text-ink" href={site.contact.tiktok} rel="noopener">TikTok</a></li>
+          <li><a class="hover:text-ink" href={site.contact.pinterest} rel="noopener">Pinterest</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="mt-20 select-none text-center font-display text-[clamp(4rem,17vw,15rem)] font-light italic leading-none text-ink/[0.06]" aria-hidden="true">{site.brand}</p>
+    <div class="mt-6 flex flex-col justify-between gap-3 border-t border-ink/10 pt-6 text-xs text-cocoa/70 sm:flex-row">
+      <p>© {year} {site.brand}. All rights reserved.</p>
+      <p>Ships to {site.rental.shipsTo.join(' · ')}</p>
+    </div>
+  </div>
+</footer>

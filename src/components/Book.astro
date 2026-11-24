@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import { site, money } from '../config/site';
+const action = site.form.action || `mailto:${site.contact.email}`;
+const isMailto = !site.form.action;
+---
+<section id="book" class="relative isolate overflow-hidden bg-ink text-ivory">
+  <img src="/media/couple-watching-film.jpg" alt="" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover opacity-50" />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-ink/90 via-ink/70 to-rose-deep/50"></div>
+  <div class="wrap section grid items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
+    <div>
+      <p class="eyebrow !text-blush reveal">Book your date</p>
+      <h2 class="reveal mt-4 text-[clamp(2.6rem,6vw,5.2rem)] font-light leading-[0.98]" style="--d:100ms">Hand them the camera. <em class="italic text-blush">Keep the feeling.</em></h2>
+      <ul class="reveal mt-8 space-y-3 text-ivory/85" style="--d:200ms">
+        <li class="flex items-center gap-3"><Icon name="calendar" class="h-5 w-5 text-blush" />Dates book up fast in peak season</li>
+        <li class="flex items-center gap-3"><Icon name="truck" class="h-5 w-5 text-blush" />Free shipping both ways · {site.rental.shipsTo.join(' · ')}</li>
+        <li class="flex items-center gap-3"><Icon name="heart" class="h-5 w-5 text-blush" />A real human replies within one business day</li>
+      </ul>
+    </div>
+
+    <form id="book-form" class="reveal rounded-[2rem] bg-ivory p-6 text-ink shadow-2xl sm:p-9" style="--d:150ms"
+      action={action} method={site.form.method} enctype={isMailto ? 'text/plain' : undefined} data-mailto={isMailto ? site.contact.email : undefined}>
+      <fieldset>
+        <legend class="font-display text-2xl">Choose your box</legend>
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          {site.packages.map((p, i) => (
+            <label class="relative cursor-pointer rounded-2xl border border-ink/15 p-4 transition has-[:checked]:border-ink has-[:checked]:bg-cream has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-rose">
+              <input type="radio" name="package" value={p.name} class="peer sr-only" checked={p.popular} required />
+              <span class="flex gap-1 text-ink/80" aria-hidden="true">{Array.from({ length: p.cameras }).map(() => <Icon name="camcorder" class="h-5 w-5" />)}</span>
+              <span class="mt-2 block font-display text-xl">{p.name}</span>
+              <span class="text-sm text-cocoa/75">{money(p.price)}</span>
+              <span class="absolute right-3 top-3 grid h-5 w-5 place-items-center rounded-full border border-ink/25 peer-checked:border-ink peer-checked:bg-ink peer-checked:text-ivory" aria-hidden="true"><Icon name="check" class="h-3 w-3" /></span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        <label class="block text-sm font-medium">Your names
+          <input name="names" autocomplete="name" required placeholder="Alex & Jordan" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+        </label>
+        <label class="block text-sm font-medium">Email
+          <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+        </label>
+        <label class="block text-sm font-medium">Wedding date
+          <input name="date" type="date" required class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+        </label>
+        <label class="block text-sm font-medium">Ship to
+          <select name="country" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink">
+            {site.rental.shipsTo.map((c) => <option>{c}</option>)}
+          </select>
+        </label>
+        <label class="block text-sm font-medium sm:col-span-2">Anything we should know? <span class="font-normal text-cocoa/60">(optional)</span>
+          <textarea name="message" rows="3" placeholder="Venue, guest count, a multi-day celebration…" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink"></textarea>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary mt-7 w-full">Check my date <Icon name="arrow" class="h-4 w-4" /></button>
+      <p class="mt-3 text-center text-xs text-cocoa/60">No payment yet. We'll confirm availability first.</p>
+      <p id="book-status" class="mt-3 hidden rounded-xl bg-sage/15 p-3 text-center text-sm" role="status"></p>
+    </form>
+  </div>
+</section>
+<script>
+  const form = document.getElementById('book-form') as HTMLFormElement | null;
+  // Pre-select a package when a "Book Core/Deluxe" button is clicked
+  document.querySelectorAll<HTMLAnchorElement>('a[data-package]').forEach((a) =>
+    a.addEventListener('click', () => {
+      const name = a.textContent?.replace('Book', '').trim();
+      const input = form?.querySelector<HTMLInputElement>(`input[name=package][value="${name}"]`);
+      if (input) input.checked = true;
+    }));
+  const mail = form?.dataset.mailto;
+  if (form && mail) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = new FormData(form);
+      const subject = `Booking inquiry: ${d.get('package')} · ${d.get('date')}`;
+      const body = [`Package: ${d.get('package')}`, `Names: ${d.get('names')}`, `Email: ${d.get('email')}`, `Wedding date: ${d.get('date')}`, `Ship to: ${d.get('country')}`, '', `${d.get('message') || ''}`].join('\n');
+      window.location.href = `mailto:${mail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const s = document.getElementById('book-status')!;
+      s.textContent = 'Opening your email app… if nothing happens, write to us at ' + mail;
+      s.classList.remove('hidden');
+    });
+  }
+</script>
