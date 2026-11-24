@@ -16,41 +16,44 @@ import { site, money } from '../config/site';
       </ul>
     </div>
 
-    <form id="book-form" class="reveal rounded-[2rem] bg-ivory p-6 text-ink shadow-2xl sm:p-9" style="--d:150ms"
+    <form id="book-form" class="reveal min-w-0 rounded-[2rem] bg-ivory p-6 text-ink shadow-2xl sm:p-9" style="--d:150ms"
       name={site.form.name} method="POST" action="/?booked=1#book" data-netlify="true" netlify-honeypot="bot-field" data-success={site.form.successMessage}>
       <input type="hidden" name="form-name" value={site.form.name} />
       <p class="hidden" aria-hidden="true"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
       <div id="book-fields">
-      <fieldset>
+      <fieldset class="min-w-0">
         <legend class="font-display text-2xl">Choose your box</legend>
-        <div class={`mt-4 grid gap-2 sm:gap-3 ${site.packages.length >= 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+        <div class={`mt-4 grid grid-cols-1 gap-2 sm:gap-3 ${site.packages.length >= 3 ? "min-[420px]:grid-cols-3" : "min-[420px]:grid-cols-2"}`}>
           {site.packages.map((p, i) => (
-            <label class="relative cursor-pointer rounded-2xl border border-ink/15 p-3 sm:p-4 transition has-[:checked]:border-ink has-[:checked]:bg-cream has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-rose">
+            <label class="relative flex min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-2xl border border-ink/15 p-3 pr-10 transition has-[:checked]:border-ink has-[:checked]:bg-cream has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-rose min-[420px]:block min-[420px]:pr-3 sm:p-4">
               <input type="radio" name="package" value={p.name} class="peer sr-only" checked={p.popular} required />
-              <span class="flex gap-0.5 pr-6 text-ink/80" aria-hidden="true">{Array.from({ length: p.cameras }).map(() => <Icon name="camcorder" class="h-4 w-4 sm:h-5 sm:w-5" />)}</span>
-              <span class="mt-2 block font-display text-base sm:text-xl">{p.name}</span>
-              <span class="text-xs sm:text-sm text-cocoa/75">{money(p.price)}</span>{p.popular && <span class="mt-1 block text-[9px] font-semibold uppercase tracking-[0.15em] text-rose-deep">Most popular</span>}
-              <span class="absolute right-2.5 top-2.5 grid h-5 w-5 place-items-center rounded-full border border-ink/25 peer-checked:border-ink peer-checked:bg-ink peer-checked:text-ivory" aria-hidden="true"><Icon name="check" class="h-3 w-3" /></span>
+              <span class="flex shrink-0 gap-0.5 text-ink/80 min-[420px]:pr-6" aria-hidden="true">{Array.from({ length: p.cameras }).map(() => <Icon name="camcorder" class="h-4 w-4 sm:h-5 sm:w-5" />)}</span>
+              <span class="min-w-0 flex-1 min-[420px]:flex-none">
+                <span class="block font-display text-lg leading-tight min-[420px]:mt-2 min-[420px]:text-base sm:text-xl">{p.name}</span>
+                <span class="text-xs sm:text-sm text-cocoa/75">{money(p.price)}</span>
+                {p.popular && <span class="mt-0.5 block text-[9px] font-semibold uppercase tracking-[0.12em] text-rose-deep min-[420px]:mt-1 min-[420px]:tracking-[0.15em]">Most popular</span>}
+              </span>
+              <span class="absolute right-2.5 top-1/2 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full border border-ink/25 peer-checked:border-ink peer-checked:bg-ink peer-checked:text-ivory min-[420px]:top-2.5 min-[420px]:translate-y-0" aria-hidden="true"><Icon name="check" class="h-3 w-3" /></span>
             </label>
           ))}
         </div>
       </fieldset>
 
-      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="mt-6 grid min-w-0 gap-4 sm:grid-cols-2">
         <label class="block text-sm font-medium">Your names
-          <input name="names" autocomplete="name" required placeholder="Alex & Jordan" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+          <input name="names" autocomplete="name" required placeholder="Alex & Jordan" class="mt-1.5 w-full min-w-0 max-w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
         </label>
         <label class="block text-sm font-medium">Email
-          <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+          <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" class="mt-1.5 w-full min-w-0 max-w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
         </label>
         <label class="block text-sm font-medium">Wedding date
-          <input name="date" type="date" required class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+          <input name="date" type="date" required class="mt-1.5 w-full min-w-0 max-w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
         </label>
         <label class="block text-sm font-medium">Venue city & state <span class="font-normal text-cocoa/60">(optional)</span>
-          <input name="venue" autocomplete="address-level2" placeholder="Asheville, NC" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
+          <input name="venue" autocomplete="address-level2" placeholder="Asheville, NC" class="mt-1.5 w-full min-w-0 max-w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink" />
         </label>
         <label class="block text-sm font-medium sm:col-span-2">Anything we should know? <span class="font-normal text-cocoa/60">(optional)</span>
-          <textarea name="message" rows="3" placeholder="Venue, guest count, a multi-day celebration…" class="mt-1.5 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink"></textarea>
+          <textarea name="message" rows="3" placeholder="Venue, guest count, a multi-day celebration…" class="mt-1.5 w-full min-w-0 max-w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base outline-none transition focus:border-ink"></textarea>
         </label>
       </div>
       <button type="submit" class="btn btn-primary mt-7 w-full disabled:opacity-60">Check my date <Icon name="arrow" class="h-4 w-4" /></button>

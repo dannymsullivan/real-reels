@@ -15,7 +15,7 @@ const anyPerk = pkgs.map(perkOf).find(Boolean);
 const perkHolder = pkgs.find((p) => perkOf(p))?.name;
 const isRush = (p: any) => extrasOf(p).some((e) => e.icon === 'clock');
 const countWord = ['One box', 'Two boxes', 'Three boxes', 'Four boxes'][pkgs.length - 1] ?? 'Our boxes';
-const cols = pkgs.length >= 3 ? 'max-w-xl lg:max-w-none lg:grid-cols-3 lg:gap-6 xl:gap-8' : 'max-w-5xl md:grid-cols-2 md:gap-8';
+const cols = pkgs.length >= 3 ? 'max-w-xl min-w-0 w-full lg:max-w-none lg:grid-cols-3 lg:gap-6 xl:gap-8' : 'max-w-5xl min-w-0 w-full md:grid-cols-2 md:gap-8';
 const ticks = [0, filmScale / 2, filmScale];
 ---
 <section id="packages" class="section bg-ivory">
@@ -31,7 +31,7 @@ const ticks = [0, filmScale / 2, filmScale];
         const dark = p.popular;
         const muted = dark ? 'text-ivory/70' : 'text-cocoa/75';
         return (
-          <article class={`reveal relative flex flex-col rounded-[2rem] p-7 sm:p-8 ${dark ? 'z-10 bg-ink text-ivory shadow-2xl shadow-ink/30 ring-1 ring-rose/40 lg:-my-6 lg:py-12' : 'border border-ink/10 bg-white/60'}`} style={`--d:${i * 140}ms`} aria-labelledby={`pkg-${p.id}`}>
+          <article class={`reveal relative flex min-w-0 flex-col rounded-[2rem] p-7 sm:p-8 ${dark ? 'z-10 bg-ink text-ivory shadow-2xl shadow-ink/30 ring-1 ring-rose/40 lg:-my-6 lg:py-12' : 'border border-ink/10 bg-white/60'}`} style={`--d:${i * 140}ms`} aria-labelledby={`pkg-${p.id}`}>
             {p.popular && (
               <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-rose px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-ivory shadow-lg">
                 <Icon name="star" class="mr-1 -mt-0.5 inline h-3 w-3" />Most popular
@@ -40,9 +40,9 @@ const ticks = [0, filmScale / 2, filmScale];
             <header>
               <h3 id={`pkg-${p.id}`} class="font-display text-3xl sm:text-[2.1rem]">{p.name}</h3>
               <p class={`mt-1 text-sm ${muted}`}>{p.blurb}</p>
-              <div class="mt-5 flex items-end justify-between gap-3">
-                <p class="font-display text-5xl leading-none">{money(p.price)}</p>
-                <span class={`mb-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${perkOf(p) ? 'bg-rose text-ivory' : dark ? 'bg-ivory/10 text-ivory/80' : 'bg-cream text-cocoa'}`}>
+              <div class="mt-5 flex flex-wrap items-end justify-between gap-x-3 gap-y-2">
+                <p class="font-display text-4xl sm:text-5xl leading-none">{money(p.price)}</p>
+                <span class={`mb-1 inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${perkOf(p) ? 'bg-rose text-ivory' : dark ? 'bg-ivory/10 text-ivory/80' : 'bg-cream text-cocoa'}`}>
                   <Icon name={perkOf(p) ? 'plane' : 'calendar'} class="h-3.5 w-3.5" />{daysOf(p)}-day rental
                 </span>
               </div>
@@ -148,7 +148,7 @@ const ticks = [0, filmScale / 2, filmScale];
     </div>
 
     <!-- Compact comparison -->
-    <div class="reveal mx-auto mt-20 max-w-4xl overflow-x-auto">
+    <div class="reveal mx-auto mt-20 max-w-4xl min-w-0 overflow-x-auto">
       <table class="w-full text-left text-xs sm:text-sm">
         <caption class="mb-4 text-left font-display text-2xl">At a glance</caption>
         <thead>
