@@ -1,0 +1,55 @@
+---
+// Secondary inline video (guest's-eye view of the band + dance floor).
+// Files: public/media/band.webm + band.mp4 (1080p, desktop), band-960.mp4 (mobile), band-poster.jpg (fallback).
+// Lazy: nothing downloads until the card nears the viewport; plays only while visible; poster only for reduced motion.
+---
+<section class="bg-ivory pb-4 pt-[clamp(4rem,9vw,7rem)]" aria-labelledby="band-title">
+  <div class="wrap">
+    <figure id="band-reel" class="reveal relative isolate overflow-hidden rounded-[2rem] bg-ink text-ivory shadow-2xl shadow-ink/25 aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]">
+      <img src="/media/band-poster.jpg" alt="Guests dancing around the couple in a barn reception while a live band plays, filmed by a guest holding a camcorder" width="1920" height="1080" loading="lazy" decoding="async" class="absolute inset-0 -z-20 h-full w-full object-cover object-[42%_50%]" />
+      <video class="absolute inset-0 -z-10 h-full w-full object-cover object-[42%_50%] opacity-0 transition-opacity duration-700 motion-reduce:hidden"
+        muted loop playsinline preload="none" poster="/media/band-poster.jpg" aria-hidden="true" tabindex="-1"
+        data-src-webm="/media/band.webm" data-src-mp4="/media/band.mp4" data-src-mobile="/media/band-960.mp4"></video>
+      <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/30 to-ink/10 max-sm:via-ink/50"></div>
+      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/60 via-transparent to-transparent max-sm:hidden"></div>
+
+      <!-- viewfinder -->
+      <div class="pointer-events-none absolute inset-4 sm:inset-6 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-ivory/85" aria-hidden="true">
+        <span class="absolute left-0 top-0 h-5 w-5 border-l border-t border-ivory/70"></span>
+        <span class="absolute right-0 top-0 h-5 w-5 border-r border-t border-ivory/70"></span>
+        <span class="absolute bottom-0 left-0 h-5 w-5 border-b border-l border-ivory/70"></span>
+        <span class="absolute bottom-0 right-0 h-5 w-5 border-b border-r border-ivory/70"></span>
+        <span class="absolute left-4 top-3 flex items-center gap-2"><span class="rec-dot h-2 w-2 rounded-full bg-rec"></span>REC · CAM 2</span>
+        <span class="absolute right-4 top-3">TABLE 7 POV</span>
+      </div>
+
+      <figcaption class="absolute inset-x-0 bottom-0 p-7 sm:p-10 lg:p-14">
+        <p class="eyebrow !text-blush">Straight off a guest's camcorder</p>
+        <h2 id="band-title" class="mt-3 max-w-2xl text-[clamp(2.1rem,4.6vw,4rem)] font-light leading-[1.02]">This is what your <em class="italic text-blush">guests catch.</em></h2>
+        <p class="mt-3 max-w-md text-ivory/80 sm:text-lg">The band, the dance floor, the moments you'd never see from the head table.</p>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+<script>
+  const fig = document.getElementById('band-reel');
+  const v = fig?.querySelector('video');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  if (fig && v && !reduce.matches && 'IntersectionObserver' in window) {
+    let loaded = false;
+    const load = () => {
+      if (loaded) return; loaded = true;
+      const mobile = matchMedia('(max-width: 767px)').matches || (navigator as any).connection?.saveData;
+      const srcs: [string, string][] = mobile
+        ? [[v.dataset.srcMobile!, 'video/mp4']]
+        : [[v.dataset.srcWebm!, 'video/webm'], [v.dataset.srcMp4!, 'video/mp4']];
+      for (const [src, type] of srcs) { const s = document.createElement('source'); s.src = src; s.type = type; v.appendChild(s); }
+      v.load();
+      v.addEventListener('playing', () => v.classList.remove('opacity-0'), { once: true });
+    };
+    // start fetching a little before it scrolls in
+    new IntersectionObserver(([e], o) => { if (e.isIntersecting) { load(); o.disconnect(); } }, { rootMargin: '300px 0px' }).observe(fig);
+    // play only while actually visible
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) { load(); v.play().catch(() => {}); } else v.pause(); }, { threshold: 0.25 }).observe(fig);
+  }
+</script>
